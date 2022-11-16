@@ -84,7 +84,7 @@ function Benchmark() {
 
    
     const onFinish = (values) => {
-        console.log(values);
+        // console.log(values);
         setUIResult(
             <div className={cx('uiResult')}>
                 <h2>Result</h2>

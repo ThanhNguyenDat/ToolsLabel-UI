@@ -10,7 +10,7 @@ const cx = classNames.bind(styles);
 function Matrix( { values } ) {
 
     const choosedTypeMatrix = (values) => {
-        console.log('values.type: ', values.type);
+        // console.log('values.type: ', values.type);
         if (values.type === 'objectdetection') {
             return <ObjeactDetection values={values} />
         }

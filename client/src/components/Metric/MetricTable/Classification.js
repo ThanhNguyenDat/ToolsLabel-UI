@@ -57,47 +57,53 @@ function SumResult() {
     return <Table columns={columns} dataSource={data} pagination={false} />;
 }
 
+// Detail Result Table
 function DetailResult() {
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState();
 
-    // useEffect(() => {
-    //   const url = 'http://localhost:4000/getClassficationBlaBla'
+    useEffect(() => {
+        const url = 'http://localhost:8001/getClassficationBlaBla'
 
-    //   const fetchApi = async () => {
-    //     setLoading(true);
-    //     const result = await axios.get(url)
-    //     console.log('result: ', result);
-    //     setResult(result);
-    //     setLoading(false);
-    //   };
-    //   fetchApi();
-    // }, [])
+        const fetchApi = async () => {
+            setLoading(true);
+            let result = await axios.get(url);
+            result = result.data;
+
+            console.log('result: ', result);
+
+            setResult(result);
+            setLoading(false);
+        };
+
+        fetchApi();
+
+    }, [])
 
     const data = [
         {
             key: '1',
             urlImage: 'img1.png',
-            predict: '1',
-            conferences: 0.1,
+            predict_1: '1',
+            conferences_1: 0.1,
         },
         {
             key: '2',
             urlImage: 'img2.png',
-            predict: '2',
-            conferences: 0.2,
+            predict_1: '2',
+            conferences_1: 0.2,
         },
         {
             key: '3',
             urlImage: 'img3.png',
-            predict: '1',
-            conferences: 0.3,
+            predict_1: '1',
+            conferences_1: 0.3,
         },
         {
             key: '4',
             urlImage: 'img4.png',
-            predict: '2',
-            conferences: 0.4,
+            predict_1: '2',
+            conferences_1: 0.4,
         },
     ];
 
@@ -109,7 +115,7 @@ function DetailResult() {
 
         {
             title: 'Predict',
-            dataIndex: 'predict',
+            dataIndex: 'predict_1',
             filters: uniqBy(
                 data.map((a) => ({
                     text: a.predict.toString(),
@@ -128,7 +134,7 @@ function DetailResult() {
         },
         {
             title: 'Conferences',
-            dataIndex: 'conferences',
+            dataIndex: 'conferences_1',
             sorter: (a, b) => a.conferences - b.conferences,
         },
     ];
