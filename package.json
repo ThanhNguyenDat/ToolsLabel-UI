@@ -1,0 +1,26 @@
+{
+  "name": "fastapi-reactjs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start-nodejs": "cd server && npm run start",
+    "start-reactjs": "cd client && npm run start",
+    "start-api-object-detection": "cd api/object_detection && bash start_api.sh",
+    "start-rasabot-api": "cd rasabot && bash start_bot.sh",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ThanhNguyenDat/fastapi-reactjs.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ThanhNguyenDat/fastapi-reactjs/issues"
+  },
+  "homepage": "https://github.com/ThanhNguyenDat/fastapi-reactjs#readme",
+  "devDependencies": {
+    "prettier": "^2.7.1"
+  }
+}
