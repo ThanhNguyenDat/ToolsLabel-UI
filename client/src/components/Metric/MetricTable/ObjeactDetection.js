@@ -6,7 +6,7 @@ import { uniqBy } from "./util";
 
 const data = [
     {
-        id: '1',
+        key: '1',
         tp: 1,
         fp: 0,
         accTP: 1,

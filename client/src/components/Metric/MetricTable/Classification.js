@@ -83,25 +83,29 @@ function DetailResult() {
     const data = [
         {
             key: '1',
-            urlImage: 'img1.png',
+            url_image: 'img1.png',
+            class_label: '1',
             predict_1: '1',
             conferences_1: 0.1,
         },
         {
             key: '2',
-            urlImage: 'img2.png',
+            url_image: 'img2.png',
+            class_label: '2',
             predict_1: '2',
             conferences_1: 0.2,
         },
         {
             key: '3',
-            urlImage: 'img3.png',
+            url_image: 'img3.png',
+            class_label: '2',
             predict_1: '1',
             conferences_1: 0.3,
         },
         {
             key: '4',
-            urlImage: 'img4.png',
+            url_image: 'img4.png',
+            class_label: '2',
             predict_1: '2',
             conferences_1: 0.4,
         },
@@ -110,32 +114,50 @@ function DetailResult() {
     const columns = [
         {
             title: 'URL Image',
-            dataIndex: 'urlImage',
+            dataIndex: 'url_image',
         },
-
         {
-            title: 'Predict',
-            dataIndex: 'predict_1',
+            title: 'Label',
+            dataIndex: 'class_label',
             filters: uniqBy(
                 data.map((a) => ({
-                    text: a.predict.toString(),
-                    value: a.predict.toString(),
+                    text: a.class_label.toString(),
+                    value: a.class_label.toString(),
                 })),
                 JSON.stringify,
             ),
 
             onFilter: (value, record) => {
-                if (typeof record.predict !== 'string') {
-                    record.predict = String(record.predict);
+                if (typeof record.class_label !== 'string') {
+                    record.class_label = String(record.class_label);
                 }
-                return record.predict.startsWith(value);
+                return record.class_label.startsWith(value);
+            },
+            filterSearch: true,
+        },
+        {
+            title: 'Predict',
+            dataIndex: 'predict_1',
+            filters: uniqBy(
+                data.map((a) => ({
+                    text: a.predict_1.toString(),
+                    value: a.predict_1.toString(),
+                })),
+                JSON.stringify,
+            ),
+
+            onFilter: (value, record) => {
+                if (typeof record.predict_1 !== 'string') {
+                    record.predict_1 = String(record.predict_1);
+                }
+                return record.predict_1.startsWith(value);
             },
             filterSearch: true,
         },
         {
             title: 'Conferences',
             dataIndex: 'conferences_1',
-            sorter: (a, b) => a.conferences - b.conferences,
+            sorter: (a, b) => a.conferences_1 - b.conferences_1,
         },
     ];
 
@@ -144,8 +166,8 @@ function DetailResult() {
         console.log(
             'Map: ',
             data.map((a) => ({
-                text: a.predict,
-                value: a.predict,
+                text: a.predict_1,
+                value: a.predict_1,
             })),
         );
     };
@@ -161,7 +183,8 @@ function DetailResult() {
     );
 }
 
-function Classification() {
+function Classification(values) {
+    console.log('values_classfication: ', values)
     return (
         <div>
             <Row>

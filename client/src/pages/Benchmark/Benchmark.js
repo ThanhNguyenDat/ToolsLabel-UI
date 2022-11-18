@@ -9,11 +9,13 @@ import {
     Select,
     Row,
     Col,
-    Divider
+    Divider,
+    Switch
 } from 'antd';
 
 import styles from "./Benchmark.scss";
 import Matrix from "~/components/Metric";
+import Input from "antd/lib/input/Input";
 
 const cx = classNames.bind(styles);
 
@@ -22,7 +24,9 @@ function Benchmark() {
 
     const [componentSize, setComponentSize] = useState('default');
     const [uiResult, setUIResult] = useState();
-    
+    const [uiDB, setUIDB] = useState();
+    const [dbImport, setDBImport] = useState(true);
+
     const onFormLayoutChange = ({ size }) => {
         setComponentSize(size);
     };
@@ -82,32 +86,28 @@ function Benchmark() {
         }
     ]
 
-   
     const onFinish = (values) => {
-        // console.log(values);
         setUIResult(
             <div className={cx('uiResult')}>
                 <h2>Result</h2>
                 <Matrix values={values}/>
             </div>
         )
-        // if (values.type === 'objectdetection') {
-        //     setUIResult(
-        //         <Matrix values={values}/>
-        //     )
-        // }
-        // else if (values.type === 'classification') {
-        //     setUIResult(
-        //         <Matrix values={values}/>
-        //     )
-        // }
-
     };
     
     const onReset = (values) => {
         form.resetFields();
     };
 
+    const onDBChange = () => {
+        if (dbImport)
+        {   
+            setUIDB(<Input placeholder={"http://example-api.com"}/>)
+        } else {
+            setUIDB(<Cascader options={dbNames}/>)
+        }
+        setDBImport(!dbImport);
+    }
 
     return ( 
         <div className={cx('wrapper')}>
@@ -142,19 +142,23 @@ function Benchmark() {
                         label="API" 
                         name="apiName" 
                         >
-                        <Select>
-                            {apiNames.map((apiName) => {
-                                return <Select.Option key={apiName.id} value={apiName.value}>{apiName.title}</Select.Option>
-                            })}
-                        </Select>
+                        <Input placeholder="http://example-api.com"/>
+                    </Form.Item>
+                    <Form.Item
+                        label="Type read databae"
+                        name="typeReadDB"
+                        >
+                    <Switch 
+                            checkedChildren="Server" 
+                            unCheckedChildren="Import" 
+                            defaultChecked 
+                            onClick={onDBChange} />
                     </Form.Item>
                     <Form.Item 
                         label="Database" 
                         name="dbName" 
                         >
-                        <Cascader
-                        options={dbNames}
-                        />
+                        {uiDB || <Cascader options={dbNames}/>}
                     </Form.Item>
                     
                     <Form.Item 

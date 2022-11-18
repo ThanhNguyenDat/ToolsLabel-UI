@@ -9,6 +9,7 @@ import Profile from '~/pages/Profile';
 import Search from '~/pages/Search';
 import Benchmark from '~/pages/Benchmark';
 import Label from '~/pages/Label';
+import History from '~/pages/History/History';
 
 // Public routes
 const publicRoutes = [
@@ -21,6 +22,7 @@ const publicRoutes = [
 
     // Benchmark
     { path: config.routes.benchmark, component: Benchmark },
+    { path: config.routes.history, component: History}
 ];
 
 const privateRoutes = [];

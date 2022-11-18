@@ -5,6 +5,12 @@
 
     .
     ├── api
+    │   ├── FastAPIDn
+    │   │   ├── api.py
+    │   │   ├── config.py
+    │   │   ├── database.ini
+    │   │   ├── requirements.txt
+    │   │   └── start_api.sh
     │   └── object_detection
     │       ├── api.py
     │       ├── requirements.txt
@@ -37,30 +43,19 @@
     │   │   └── setupTests.js
     │   ├── package-lock.json
     │   └── package.json
-    ├── rasabot
-    │   ├── images
-    │   ├── venv
-    │   ├── ZABot
-    │   ├── README.md
-    │   └── start_bot.sh
     └── README.md 
 
 
 ## Initial environment
 `npm install`
 `cd client && npm install`
-`cd server && npm install`
 
-## Run server Fastapi
-`npm run start-api-object-detection`
+## Run API
+`cd api/FastAPIDb && bash start_api.sh`
 
-## Run server React
+## Run UI React
 `npm run start-reactjs`
-
-## Run chatbot rasa api
-`npm run start-rasabot-api`
 
 ## Plan
 - firebase <-> React
-- server nodejs configing
 - adding api/crawl_data: image from keyword and mp3 from url

@@ -6,6 +6,8 @@ const routes = {
     label: '/label',
 
     benchmark: '/benchmark',
+    history: '/history',
+    
 };
 
 export default routes;

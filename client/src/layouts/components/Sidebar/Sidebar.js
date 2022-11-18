@@ -19,6 +19,7 @@ function Sidebar() {
             <Menu>
                 <MenuItem title="Label" to={config.routes.label} />
                 <MenuItem title="Benchmark" to={config.routes.benchmark} />
+                <MenuItem title="History" to={config.routes.history} />
             </Menu>
         </aside>
     );
