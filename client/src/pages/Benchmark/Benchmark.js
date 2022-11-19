@@ -1,21 +1,12 @@
-import { useState, useEffect } from "react";
-import classNames from "classnames/bind";
+import { useState, useEffect } from 'react';
+import classNames from 'classnames/bind';
 import 'antd/dist/antd.css';
-import { 
-    Button,
-    Cascader,
-    Form,
-    Radio,
-    Select,
-    Row,
-    Col,
-    Divider,
-    Switch
-} from 'antd';
+import { Button, Cascader, Form, Radio, Select, Divider, Switch, Progress } from 'antd';
+import Input from 'antd/lib/input/Input';
+import axios from 'axios';
 
-import styles from "./Benchmark.scss";
-import Matrix from "~/components/Metric";
-import Input from "antd/lib/input/Input";
+import styles from './Benchmark.scss';
+import { database_source, typeMetric } from '~/resources';
 
 const cx = classNames.bind(styles);
 
@@ -23,7 +14,6 @@ function Benchmark() {
     const [form] = Form.useForm();
 
     const [componentSize, setComponentSize] = useState('default');
-    const [uiResult, setUIResult] = useState();
     const [uiDB, setUIDB] = useState();
     const [dbImport, setDBImport] = useState(true);
 
@@ -31,85 +21,62 @@ function Benchmark() {
         setComponentSize(size);
     };
 
-    const apiNames = [
-        {
-            id: 1,
-            title: 'Api1',
-            value: 'api1',
-        },
-        {
-            id: 2,
-            title: 'Api2',
-            value: 'api2',
-        },
-        
-    ];
+    const [progress, setProgress] = useState(0);
 
-    const dbNames = [
-        {
-            value: 'sv21',
-            label: 'sv21',
-            children: [
-                {
-                value: 'faceId',
-                label: 'FaceID',
-                },
-            ],
-        },
-
-        {
-            value: 'sv22',
-            label: 'sv22',
-            children: [
-                {
-                    value: 'blur',
-                    label: 'Blur',
-                },
-                {
-                    value: 'closedEye',
-                    label: 'Closed Eye'
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setProgress((oldProgress) => {
+                if (oldProgress === 100) {
+                    return 0;
                 }
-            ],  
-        }
-    ]
+                const diff = Math.random() * 10;
+                return Math.min(oldProgress + diff, 100);
+            });
+        }, 500);
 
-    const typeMatrixs = [
-        {
-            id: 1,
-            title: 'Object Detection',
-            value: 'objectdetection'
-        },
-        {
-            id: 2,
-            title: 'Classification',
-            value: 'classification'
+        return () => {
+            clearInterval(timer);
+        };
+    }, []);
+
+    const fetchJobsAPISubmit = async (values) => {
+        // call api
+        const formData = new FormData();
+
+        if (values) {
+            console.log('type: ', values.job_type);
+
+            formData.append('uid', 123);
+            formData.append('url_api', values.url_api);
+            formData.append('db_name', values.db_name);
+            formData.append('job_type', values.job_type);
+
+            const url = 'http://0.0.0.0:8001/job_submit';
+            const data = await axios.post(url, formData); // using with await
+
+            console.log('Called API: ', data);
         }
-    ]
+    };
 
     const onFinish = (values) => {
-        setUIResult(
-            <div className={cx('uiResult')}>
-                <h2>Result</h2>
-                <Matrix values={values}/>
-            </div>
-        )
+        console.log('values: ', values);
+        fetchJobsAPISubmit(values);
     };
-    
+
     const onReset = (values) => {
         form.resetFields();
     };
 
     const onDBChange = () => {
-        if (dbImport)
-        {   
-            setUIDB(<Input placeholder={"http://example-api.com"}/>)
+        if (dbImport) {
+            setUIDB(<Input placeholder={'http://example-api.com'} />);
         } else {
-            setUIDB(<Cascader options={dbNames}/>)
+            setUIDB(<Cascader options={database_source} />);
         }
         setDBImport(!dbImport);
-    }
+    };
 
-    return ( 
+    return (
         <div className={cx('wrapper')}>
             <Divider orientation="center">Benchmark</Divider>
             <div>
@@ -129,52 +96,46 @@ function Benchmark() {
                     }}
                     onValuesChange={onFormLayoutChange}
                     size={componentSize}
-                    >
+                >
                     <Form.Item label="Form Size" name="size">
-                        <Radio.Group defaultValue={"default"}>
-                        <Radio.Button value="small">Small</Radio.Button>
-                        <Radio.Button value="default">Default</Radio.Button>
-                        <Radio.Button value="large">Large</Radio.Button>
+                        <Radio.Group defaultValue={'default'}>
+                            <Radio.Button value="small">Small</Radio.Button>
+                            <Radio.Button value="default">Default</Radio.Button>
+                            <Radio.Button value="large">Large</Radio.Button>
                         </Radio.Group>
                     </Form.Item>
-                    
-                    <Form.Item 
-                        label="API" 
-                        name="apiName" 
-                        >
-                        <Input placeholder="http://example-api.com"/>
+
+                    <Form.Item label="API" name="url_api">
+                        <Input placeholder="http://example-api.com" />
                     </Form.Item>
+                    <Form.Item label="Type read databae" name="typeReadDB">
+                        <Switch
+                            checkedChildren="Server"
+                            unCheckedChildren="Import"
+                            defaultChecked
+                            onClick={onDBChange}
+                        />
+                    </Form.Item>
+                    <Form.Item label="Database" name="db_name">
+                        {uiDB || <Cascader options={database_source} />}
+                    </Form.Item>
+
                     <Form.Item
-                        label="Type read databae"
-                        name="typeReadDB"
-                        >
-                    <Switch 
-                            checkedChildren="Server" 
-                            unCheckedChildren="Import" 
-                            defaultChecked 
-                            onClick={onDBChange} />
-                    </Form.Item>
-                    <Form.Item 
-                        label="Database" 
-                        name="dbName" 
-                        >
-                        {uiDB || <Cascader options={dbNames}/>}
-                    </Form.Item>
-                    
-                    <Form.Item 
-                        label="Type" 
-                        name="type"
+                        label="Type"
+                        name="job_type"
                         rules={[
                             {
                                 required: true,
-                            }
+                            },
                         ]}
-                        >
+                    >
                         <Select>
-                            {typeMatrixs.map((type) => {
-                                return <Select.Option key={type.id} value={type.value}>
+                            {typeMetric.map((type) => {
+                                return (
+                                    <Select.Option key={type.id} value={type.value}>
                                         {type.title}
                                     </Select.Option>
+                                );
                             })}
                         </Select>
                     </Form.Item>
@@ -187,13 +148,20 @@ function Benchmark() {
                             Reset
                         </Button>
                     </Form.Item>
-                    </Form>
+                </Form>
             </div>
             <div>
-                {uiResult}
-            </div> 
+                <Progress
+                    percent={progress}
+                    strokeColor={{
+                        from: '#108ee9',
+                        to: '#87d068',
+                    }}
+                />
+                {/* {uiResult} */}
+            </div>
         </div>
-     );
+    );
 }
 
 export default Benchmark;

@@ -1,8 +1,8 @@
-import classNames from "classnames/bind";
+import classNames from 'classnames/bind';
 import 'antd/dist/antd.css';
 import { Table } from 'antd';
 
-import { uniqBy } from "./util";
+import { uniqBy } from './util';
 
 const data = [
     {
@@ -15,8 +15,7 @@ const data = [
         recall: 0.14,
         map: 0.12,
     },
-    
-]
+];
 
 const columns = [
     {
@@ -46,17 +45,15 @@ const columns = [
     {
         title: 'mAP',
         dataIndex: 'map',
-    }        
+    },
 ];
 
 function ObjeactDetection({ values }) {
     const onChange = (pagination, filters, sorter, extra) => {
-        console.log('params', pagination, filters, sorter, extra);
+        console.log('params: ', pagination, filters, sorter, extra, values);
     };
-  
-    return (
-        <Table columns={columns} dataSource={data} pagination={false} onChange={onChange} />
-        );
-  }
+
+    return <Table columns={columns} dataSource={data} pagination={false} onChange={onChange} />;
+}
 
 export default ObjeactDetection;
