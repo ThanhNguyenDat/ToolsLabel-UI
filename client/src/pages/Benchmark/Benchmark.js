@@ -51,10 +51,9 @@ function Benchmark() {
             formData.append('db_name', values.db_name);
             formData.append('job_type', values.job_type);
 
-            const url = 'http://0.0.0.0:8001/job_submit';
-            const data = await axios.post(url, formData); // using with await
-
-            console.log('Called API: ', data);
+            const url = 'http://0.0.0.0:8001/jobSubmit';
+            const data = await axios.post(url, formData);
+            // console.log('Called API: ', data);
         }
     };
 

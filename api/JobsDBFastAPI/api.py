@@ -14,6 +14,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from config import config
 import psycopg2
 
+TABLE_NAME = '"jobs"'
 
 app = FastAPI()
 
@@ -29,7 +30,7 @@ app.add_middleware(
 
 
 @app.get("/getResult/")
-async def objectdetection():
+async def getResult():
     try:
         params = config()
 
@@ -39,25 +40,28 @@ async def objectdetection():
 
         # create a cursor
         cur = conn.cursor()
-
+        _sub = ['id', 'uid', 'job_name', 'job_type', 'url_api', 'db_name',
+                'total', 'rest', 'skiped', 'stat', 'start_time', 'end_time',
+                'accuracy', 'precision', 'recall', 'f1_score', 'auc_roc', 'log_loss',
+                'tp', 'fp', 'accuracy_tp', 'accuracy_tp', 'map']
+        __sub = ""
+        for s in _sub:
+            __sub = __sub + ", " + s
+        __sub = __sub[2:]
         # execute a statement
-        cur.execute('SELECT * FROM "jobs"')
+        sql = f"""SELECT {__sub} FROM {TABLE_NAME}"""
+        cur.execute(sql)
         allData = cur.fetchall()
 
         # # convert tuple to list
         # allData = [list(data) for data in allData]
         # print(allData)
+
         allData = [{
-            'id': data[0],
-            'uid': data[1],
-            'job_name': data[2],
-            'job_type': data[3],
-            'url_api': data[4],
-            'db_name': data[5]
-            # list_map[i]: list(v)[i]
+            _sub[i]: data[i] for i in range(len(_sub))
         } for data in allData]
 
-        print(allData)
+        # print(allData)
 
         return jsonable_encoder(allData)
 
@@ -73,8 +77,8 @@ async def objectdetection():
             print('Database connection closed.')
 
 
-@app.post("/job_submit")
-async def job_form_submit(uid: int = Form(), job_type: str = Form(), url_api: str = Form(), db_name: str = Form()):
+@app.post("/jobSubmit")
+async def jobSubmit(uid: int = Form(), job_type: str = Form(), url_api: str = Form(), db_name: str = Form()):
     try:
         params = config()
 
@@ -87,11 +91,14 @@ async def job_form_submit(uid: int = Form(), job_type: str = Form(), url_api: st
 
         record = (uid, job_type, url_api, db_name, 'now')
         # execute a statement
-        cur.execute("""
-            INSERT INTO "jobs" (uid, job_type, url_api, db_name, start_time) 
+        sql = f"""
+            INSERT INTO {TABLE_NAME} (uid, job_type, url_api, db_name, start_time) 
             values (%s, %s, %s, %s, %s);
-                    """, record)
+        """
+        cur.execute(sql, record)
+
         conn.commit()
+
         return "Successfully"
 
     except Exception as e:

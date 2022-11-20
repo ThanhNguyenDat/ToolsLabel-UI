@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
-import { Col, Row, Table } from 'antd';
+import { Col, Row, Table, Divider } from 'antd';
 import React from 'react';
 
 import { uniqBy } from './util';
@@ -9,6 +9,7 @@ import styles from './MetricTable.scss';
 // import * as resultClassificationService from '~/services/resultClassificationService';
 
 import axios from 'axios';
+import Column from 'antd/lib/table/Column';
 
 const cx = classNames.bind(styles);
 
@@ -25,36 +26,16 @@ function SumResult() {
         },
     ];
 
-    const columns = [
-        {
-            title: 'Accuracy',
-            dataIndex: 'accuracy',
-        },
-        {
-            title: 'Precision',
-            dataIndex: 'precision',
-        },
-        {
-            title: 'Recall',
-            dataIndex: 'recall',
-        },
-
-        {
-            title: 'F1 Score',
-            dataIndex: 'f1Score',
-        },
-
-        {
-            title: 'AUC-ROC',
-            dataIndex: 'aucRoc',
-        },
-        {
-            title: 'LogLoss',
-            dataIndex: 'logLoss',
-        },
-    ];
-
-    return <Table columns={columns} dataSource={data} pagination={false} />;
+    return (
+        <Table dataSource={data} pagination={false}>
+            <Column title="Accuracy" dataIndex="accuracy" />
+            <Column title="Precision" dataIndex="precision" />
+            <Column title="Recall" dataIndex="recall" />
+            <Column title="F1 Score" dataIndex="f1Score" />
+            <Column title="AUC-ROC" dataIndex="aucRoc" />
+            <Column title="LogLoss" dataIndex="logLoss" />
+        </Table>
+    );
 }
 
 // Detail Result Table
@@ -62,23 +43,20 @@ function DetailResult() {
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState();
 
+    const fetchApi = async (id) => {
+        setLoading(true);
+        const url = 'http://localhost:8002/getResult';
+        const result = await axios.get(url);
+
+        console.log('result: ', result.data);
+
+        setResult(result.data);
+        setLoading(false);
+    };
+
     useEffect(() => {
-        const url = 'http://localhost:8001/getClassficationBlaBla'
-
-        const fetchApi = async () => {
-            setLoading(true);
-            let result = await axios.get(url);
-            result = result.data;
-
-            console.log('result: ', result);
-
-            setResult(result);
-            setLoading(false);
-        };
-
         fetchApi();
-
-    }, [])
+    }, []);
 
     const data = [
         {
@@ -111,56 +89,6 @@ function DetailResult() {
         },
     ];
 
-    const columns = [
-        {
-            title: 'URL Image',
-            dataIndex: 'url_image',
-        },
-        {
-            title: 'Label',
-            dataIndex: 'class_label',
-            filters: uniqBy(
-                data.map((a) => ({
-                    text: a.class_label.toString(),
-                    value: a.class_label.toString(),
-                })),
-                JSON.stringify,
-            ),
-
-            onFilter: (value, record) => {
-                if (typeof record.class_label !== 'string') {
-                    record.class_label = String(record.class_label);
-                }
-                return record.class_label.startsWith(value);
-            },
-            filterSearch: true,
-        },
-        {
-            title: 'Predict',
-            dataIndex: 'predict_1',
-            filters: uniqBy(
-                data.map((a) => ({
-                    text: a.predict_1.toString(),
-                    value: a.predict_1.toString(),
-                })),
-                JSON.stringify,
-            ),
-
-            onFilter: (value, record) => {
-                if (typeof record.predict_1 !== 'string') {
-                    record.predict_1 = String(record.predict_1);
-                }
-                return record.predict_1.startsWith(value);
-            },
-            filterSearch: true,
-        },
-        {
-            title: 'Conferences',
-            dataIndex: 'conferences_1',
-            sorter: (a, b) => a.conferences_1 - b.conferences_1,
-        },
-    ];
-
     const onChange = (pagination, filters, sorter, extra) => {
         console.log('params', pagination, filters, sorter, extra);
         console.log(
@@ -174,27 +102,71 @@ function DetailResult() {
 
     return (
         <Table
-            columns={columns}
-            dataSource={data}
-            pagination={{ pageSize: 50 }}
-            scroll={{ y: 240 }}
+            // columns={columns}
+            dataSource={result}
+            pagination={{ pageSize: 10 }}
+            // scroll={{ y: 240 }}
             onChange={onChange}
-        />
+            loading={loading}
+        >
+            <Column title="URL Image" dataIndex="url_image" />
+            <Column
+                title="Label"
+                dataIndex="class_label"
+                filters={uniqBy(
+                    data.map((a) => ({
+                        text: a.class_label.toString(),
+                        value: a.class_label.toString(),
+                    })),
+                    JSON.stringify,
+                )}
+                onFilter={(value, record) => {
+                    if (typeof record.class_label !== 'string') {
+                        record.class_label = String(record.class_label);
+                    }
+                    return record.class_label.startsWith(value);
+                }}
+                filterSearch={true}
+            />
+            <Column
+                title="Predict"
+                dataIndex="predict_1"
+                filters={uniqBy(
+                    data.map((a) => ({
+                        text: a.predict_1.toString(),
+                        value: a.predict_1.toString(),
+                    })),
+                    JSON.stringify,
+                )}
+                onFilter={(value, record) => {
+                    if (typeof record.predict_1 !== 'string') {
+                        record.predict_1 = String(record.predict_1);
+                    }
+                    return record.predict_1.startsWith(value);
+                }}
+                filterSearch={true}
+            />
+            <Column
+                title="Conferences"
+                dataIndex="conferences_1"
+                sorter={(a, b) => a.conferences_1 - b.conferences_1}
+            />
+        </Table>
     );
 }
 
-function Classification(values) {
-    console.log('values_classfication: ', values)
+function Classification(values, id) {
+    console.log('values_classfication: ', values, id);
     return (
         <div>
             <Row>
-                <h2>Summary</h2>
+                <Divider orientation="left">Summary</Divider>
                 <div className={cx('table-summary-result')}>
                     <SumResult />
                 </div>
             </Row>
             <Row>
-                <h2>Detail</h2>
+                <Divider orientation="left">Detail</Divider>
                 <DetailResult />
             </Row>
         </div>
