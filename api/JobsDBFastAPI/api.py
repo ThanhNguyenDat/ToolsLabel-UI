@@ -30,7 +30,7 @@ app.add_middleware(
 
 
 @app.get("/getResult/")
-async def getResult():
+async def getResult(id: Union[int, None] = None):
     try:
         params = config()
 
@@ -44,14 +44,20 @@ async def getResult():
                 'total', 'rest', 'skiped', 'stat', 'start_time', 'end_time',
                 'accuracy', 'precision', 'recall', 'f1_score', 'auc_roc', 'log_loss',
                 'tp', 'fp', 'accuracy_tp', 'accuracy_tp', 'map']
+
+        # cat _sub to string __sub
         __sub = ""
         for s in _sub:
             __sub = __sub + ", " + s
         __sub = __sub[2:]
         # execute a statement
+        print('id:', id)
         sql = f"""SELECT {__sub} FROM {TABLE_NAME}"""
+        if id:
+            sql = f"""SELECT {__sub} FROM {TABLE_NAME} WHERE id={id}"""
         cur.execute(sql)
         allData = cur.fetchall()
+        cur.close()
 
         # # convert tuple to list
         # allData = [list(data) for data in allData]
@@ -63,12 +69,16 @@ async def getResult():
 
         # print(allData)
 
-        return jsonable_encoder(allData)
+        return jsonable_encoder({
+            'status': 'success',
+            'data': allData
+        })
 
     except Exception as e:
         print(e)
         return jsonable_encoder({
-            "ERROR": str(e)
+            'status': 'fail',
+            'error': str(e)
         })
 
     finally:
@@ -98,13 +108,53 @@ async def jobSubmit(uid: int = Form(), job_type: str = Form(), url_api: str = Fo
         cur.execute(sql, record)
 
         conn.commit()
+        cur.close()
 
-        return "Successfully"
+        return jsonable_encoder({
+            'status': 'success'
+        })
 
     except Exception as e:
         print(e)
         return jsonable_encoder({
-            "ERROR": str(e)
+            'status': 'fail',
+            'error': str(e)
+        })
+
+    finally:
+        if conn is not None:
+            conn.close()
+            print('Database connection closed.')
+
+
+@app.delete("/deleteJob/{id}")
+# @app.delete("/deleteJob")
+def deleteJob(id: Union[int, None] = None):
+    try:
+        params = config()
+
+        # connect to the PostgreSQL server
+        print('Connecting to the PostgreSQL database...')
+        conn = psycopg2.connect(**params)
+
+        # create a cursor
+        cur = conn.cursor()
+
+        # execute a statement
+        sql = f"""DELETE FROM {TABLE_NAME} WHERE id=%s"""
+
+        cur.execute(sql, (id,))
+        conn.commit()
+        cur.close()
+
+        return jsonable_encoder({
+            'status': 'success'
+        })
+    except Exception as e:
+        print(e)
+        return jsonable_encoder({
+            'status': 'fail',
+            "error": str(e)
         })
 
     finally:

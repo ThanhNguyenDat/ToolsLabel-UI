@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { QuestionCircleOutlined } from '@ant-design/icons';
+import { QuestionCircleOutlined, PlusCircleTwoTone, MinusCircleTwoTone } from '@ant-design/icons';
 import { Table, Button, Popconfirm } from 'antd';
 import axios from 'axios';
 
@@ -8,8 +8,9 @@ import ObjeactDetection from '~/components/Metric/MetricTable/ObjeactDetection';
 import Column from 'antd/lib/table/Column';
 
 function History({ values }) {
-    const [data, setData] = useState();
+    const [jobs, setJobs] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [tableParams, setTableParams] = useState();
 
     const fetchJobsAPISubmit = async () => {
         // call api
@@ -17,7 +18,9 @@ function History({ values }) {
         const url = 'http://0.0.0.0:8001/getResult';
         const result = await axios.get(url);
         console.log('Called API: ', result.data);
-        setData(result.data);
+        if (result.data.status === 'success') {
+            setJobs({ data: result.data.data });
+        }
         setLoading(false);
     };
 
@@ -25,7 +28,7 @@ function History({ values }) {
         fetchJobsAPISubmit();
     }, []);
 
-    const expandTypeJob = (record) => {
+    const expandTypeJobRender = (record) => {
         if (record.job_type === 'classification') {
             return <Classification values={values} id={record.id} />;
         } else if (record.job_type === 'object_detection') {
@@ -33,9 +36,49 @@ function History({ values }) {
         }
     };
 
+    const expandIcon = ({ expanded, onExpand, record }) => {
+        // if (record.id > 5) return null;
+        return expanded ? (
+            <MinusCircleTwoTone
+                onClick={(e) => {
+                    onExpand(record, e);
+                }}
+            />
+        ) : (
+            <PlusCircleTwoTone
+                onClick={(e) => {
+                    onExpand(record, e);
+                }}
+            />
+        );
+    };
+
+    const onConfirmDeleteJob = async (record) => {
+        // fetchDelete(record);
+
+        const url = 'http://0.0.0.0:8001/deleteJob/' + record.id;
+        console.log(url);
+        const result = await axios.delete(url);
+        console.log('status: ', result.data.status);
+        if (result.data.status === 'success') {
+            const filteredJobs = jobs.data.filter((job) => job.id !== record.id);
+            setJobs({ data: [...filteredJobs] });
+        }
+    };
+
     return (
         <div>
-            <Table dataSource={data} rowKey="id" expandedRowRender={expandTypeJob} loading={loading}>
+            <Table
+                dataSource={jobs.data}
+                rowKey="id"
+                loading={loading}
+                expandable={{
+                    rowExpandable: (record) => true, //record.id < 5,
+                    expandedRowRender: expandTypeJobRender,
+                    defaultExpandAllRows: false,
+                    expandIcon: expandIcon,
+                }}
+            >
                 <Column title="Id" dataIndex={'id'} />
                 <Column title="Job Type" dataIndex={'job_type'} />
                 <Column title="Url API" dataIndex={'url_api'} />
@@ -59,7 +102,7 @@ function History({ values }) {
                                     />
                                 }
                                 onConfirm={() => {
-                                    console.log(record.id);
+                                    onConfirmDeleteJob(record);
                                 }}
                             >
                                 <Button

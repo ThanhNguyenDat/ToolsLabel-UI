@@ -30,7 +30,7 @@ app.add_middleware(
 
 
 @app.get("/getResult/")
-async def objectdetection():
+async def objectdetection(id_job: Union[int, None] = None):
     try:
         params = config()
 
@@ -48,6 +48,8 @@ async def objectdetection():
         __sub = __sub[2:]
         # execute a statement
         sql = f"""SELECT {__sub} FROM {TABLE_NAME}"""
+        if id_job:
+            sql = f"""SELECT {__sub} FROM {TABLE_NAME} WHERE id_job={id_job}"""
         cur.execute(sql)
         allData = cur.fetchall()
 
@@ -59,14 +61,18 @@ async def objectdetection():
             _sub[i]: data[i] for i in range(len(_sub))
         } for data in allData]
 
-        print(allData)
+        # print(allData)
 
-        return jsonable_encoder(allData)
+        return jsonable_encoder({
+            'status': 'success',
+            'data': allData
+        })
 
     except Exception as e:
         print(e)
         return jsonable_encoder({
-            "ERROR": str(e)
+            'status': 'fail',
+            'error': str(e)
         })
 
     finally:
@@ -96,12 +102,15 @@ async def job_form_submit(uid: int = Form(), job_type: str = Form(), url_api: st
 
         conn.commit()
 
-        return "Successfully"
+        return jsonable_encoder({
+            'status': 'success'
+        })
 
     except Exception as e:
         print(e)
         return jsonable_encoder({
-            "ERROR": str(e)
+            'status': 'fail',
+            'error': str(e)
         })
 
     finally:

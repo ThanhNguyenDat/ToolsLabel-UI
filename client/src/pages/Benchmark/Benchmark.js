@@ -53,7 +53,7 @@ function Benchmark() {
 
             const url = 'http://0.0.0.0:8001/jobSubmit';
             const data = await axios.post(url, formData);
-            // console.log('Called API: ', data);
+            console.log('Called API: ', data);
         }
     };
 
@@ -120,7 +120,7 @@ function Benchmark() {
                     </Form.Item>
 
                     <Form.Item
-                        label="Type"
+                        label="Job Type"
                         name="job_type"
                         rules={[
                             {
