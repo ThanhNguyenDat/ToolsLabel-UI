@@ -1,6 +1,5 @@
 # ToolsLabelUI
 
-
 ## Work dir
 
     .
@@ -43,19 +42,23 @@
     │   │   └── setupTests.js
     │   ├── package-lock.json
     │   └── package.json
-    └── README.md 
-
+    └── README.md
 
 ## Initial environment
+
 `npm install`
 `cd client && npm install`
 
 ## Run API
-`cd api/FastAPIDb && bash start_api.sh`
+
+`cd api/JobsDBFastAPI && bash start_api.sh`
+`cd api/JobClassificationDBFastAPI && bash start_api.sh`
 
 ## Run UI React
+
 `npm run start-reactjs`
 
 ## Plan
+
 - firebase <-> React
 - adding api/crawl_data: image from keyword and mp3 from url

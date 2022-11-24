@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { QuestionCircleOutlined, PlusCircleTwoTone, MinusCircleTwoTone } from '@ant-design/icons';
-import { Table, Button, Popconfirm } from 'antd';
+import { Table, Button, Popconfirm, message } from 'antd';
 import axios from 'axios';
 
 import Classification from '~/components/Metric/MetricTable/Classification';
@@ -10,7 +10,25 @@ import Column from 'antd/lib/table/Column';
 function History({ values }) {
     const [jobs, setJobs] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [tableParams, setTableParams] = useState();
+    const [messageAPI, contextHolder] = message.useMessage();
+    const success = () => {
+        messageAPI.open({
+            type: 'success',
+            content: 'Delete successfully',
+        });
+    };
+    const error = () => {
+        messageAPI.open({
+            type: 'error',
+            content: 'This is an error message',
+        });
+    };
+    const warning = () => {
+        messageAPI.open({
+            type: 'warning',
+            content: 'This is a warning message',
+        });
+    };
 
     const fetchJobsAPISubmit = async () => {
         // call api
@@ -63,11 +81,13 @@ function History({ values }) {
         if (result.data.status === 'success') {
             const filteredJobs = jobs.data.filter((job) => job.id !== record.id);
             setJobs({ data: [...filteredJobs] });
+            success();
         }
     };
 
     return (
-        <div>
+        <>
+            {contextHolder}
             <Table
                 dataSource={jobs.data}
                 rowKey="id"
@@ -119,7 +139,7 @@ function History({ values }) {
                     }}
                 />
             </Table>
-        </div>
+        </>
     );
 }
 

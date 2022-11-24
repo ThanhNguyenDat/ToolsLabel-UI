@@ -1,27 +1,34 @@
 import { useState, useEffect } from 'react';
 import classNames from 'classnames/bind';
 import 'antd/dist/antd.css';
-import { Button, Cascader, Form, Radio, Select, Divider, Switch, Progress } from 'antd';
+import { Button, Cascader, Form, Radio, Select, Divider, Progress } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
+import { Upload, message } from 'antd';
 import Input from 'antd/lib/input/Input';
 import axios from 'axios';
 
 import styles from './Benchmark.scss';
 import { database_source, typeMetric } from '~/resources';
 
+// import { UploadFile } from '~/components/UploadFile';
 const cx = classNames.bind(styles);
 
 function Benchmark() {
     const [form] = Form.useForm();
-
-    const [componentSize, setComponentSize] = useState('default');
     const [uiDB, setUIDB] = useState();
-    const [dbImport, setDBImport] = useState(true);
 
-    const onFormLayoutChange = ({ size }) => {
-        setComponentSize(size);
-    };
+    const [fileCSV, setFileCSV] = useState();
+    const [array, setArray] = useState([]);
+    const [loadingCSV, setLoadingCSV] = useState(false);
 
     const [progress, setProgress] = useState(0);
+    const [messageAPI, contextMsg] = message.useMessage();
+    const success = (messageAPI) => {
+        messageAPI.open({
+            type: 'success',
+            content: 'Submit successfully',
+        });
+    };
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -39,12 +46,12 @@ function Benchmark() {
         };
     }, []);
 
+    // submit data
     const fetchJobsAPISubmit = async (values) => {
-        // call api
         const formData = new FormData();
 
         if (values) {
-            console.log('type: ', values.job_type);
+            // console.log('type: ', values.job_type);
 
             formData.append('uid', 123);
             formData.append('url_api', values.url_api);
@@ -54,29 +61,50 @@ function Benchmark() {
             const url = 'http://0.0.0.0:8001/jobSubmit';
             const data = await axios.post(url, formData);
             console.log('Called API: ', data);
+            if (data.data.status === 'success') {
+                success(messageAPI);
+            }
+        }
+    };
+
+    const onTypeDBChange = (e) => {
+        const type = e.target.value;
+        console.log('Type: ', type);
+
+        if (type === 'typing') {
+            setUIDB(<Input placeholder={'http://example-api.com'} />);
+        } else if (type === 'server') {
+            setUIDB(<Cascader options={database_source} />);
+        } else if (type === 'upload') {
+            setUIDB(
+                <Upload.Dragger
+                    accept=".csv"
+                    multiple={false}
+                    action="API_UPLOAD"
+                    onChange={(e) => {
+                        console.log(e);
+                    }}
+                >
+                    <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                </Upload.Dragger>,
+            );
         }
     };
 
     const onFinish = (values) => {
         console.log('values: ', values);
         fetchJobsAPISubmit(values);
+        onReset(values);
     };
 
     const onReset = (values) => {
         form.resetFields();
-    };
-
-    const onDBChange = () => {
-        if (dbImport) {
-            setUIDB(<Input placeholder={'http://example-api.com'} />);
-        } else {
-            setUIDB(<Cascader options={database_source} />);
-        }
-        setDBImport(!dbImport);
+        setUIDB(<Cascader options={database_source} />);
     };
 
     return (
         <div className={cx('wrapper')}>
+            {contextMsg}
             <Divider orientation="center">Benchmark</Divider>
             <div>
                 <h2>Parameters</h2>
@@ -90,32 +118,20 @@ function Benchmark() {
                         span: 14,
                     }}
                     layout="horizontal"
-                    initialValues={{
-                        size: componentSize,
-                    }}
-                    onValuesChange={onFormLayoutChange}
-                    size={componentSize}
                 >
-                    <Form.Item label="Form Size" name="size">
-                        <Radio.Group defaultValue={'default'}>
-                            <Radio.Button value="small">Small</Radio.Button>
-                            <Radio.Button value="default">Default</Radio.Button>
-                            <Radio.Button value="large">Large</Radio.Button>
-                        </Radio.Group>
-                    </Form.Item>
-
                     <Form.Item label="API" name="url_api">
                         <Input placeholder="http://example-api.com" />
                     </Form.Item>
-                    <Form.Item label="Type read databae" name="typeReadDB">
-                        <Switch
-                            checkedChildren="Server"
-                            unCheckedChildren="Import"
-                            defaultChecked
-                            onClick={onDBChange}
-                        />
+
+                    <Form.Item label="Type read database" name="typeReadDB">
+                        <Radio.Group onChange={onTypeDBChange} defaultValue="server">
+                            <Radio.Button value="server">Server</Radio.Button>
+                            <Radio.Button value="upload">Upload</Radio.Button>
+                            <Radio.Button value="typing">Typing</Radio.Button>
+                        </Radio.Group>
                     </Form.Item>
-                    <Form.Item label="Database" name="db_name">
+
+                    <Form.Item label="Database" name="db_name" va>
                         {uiDB || <Cascader options={database_source} />}
                     </Form.Item>
 

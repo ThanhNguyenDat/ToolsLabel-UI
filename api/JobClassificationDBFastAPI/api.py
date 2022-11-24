@@ -1,16 +1,16 @@
 from typing import Union
-
-from fastapi import FastAPI
-from fastapi import File, FastAPI
-
+import os
 import uvicorn
 import numpy as np
 
 from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.encoders import jsonable_encoder
-from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import requests
+from werkzeug import security
+
 import psycopg2
+from sklearn.metrics import confusion_matrix
 
 from config import config
 
@@ -30,7 +30,7 @@ app.add_middleware(
 
 
 @app.get("/getResult/")
-async def objectdetection(id_job: Union[int, None] = None):
+async def classification(id_job: Union[int, None] = None):
     try:
         params = config()
 
@@ -81,42 +81,27 @@ async def objectdetection(id_job: Union[int, None] = None):
             print('Database connection closed.')
 
 
-@app.post("/job_submit")
-async def job_form_submit(uid: int = Form(), job_type: str = Form(), url_api: str = Form(), db_name: str = Form()):
-    try:
-        params = config()
+@app.post("/upload")
+async def upload_file():
+    file = requests.Request['file']
 
-        # connect to the PostgreSQL server
-        print('Connecting to the PostgreSQL database...')
-        conn = psycopg2.connect(**params)
 
-        # create a cursor
-        cur = conn.cursor()
+def gen_file_name(filename):
+    """
+    If file was exist already, rename it and return a new name
+    """
 
-        record = (uid, job_type, url_api, db_name, 'now')
-        # execute a statement
-        cur.execute("""
-            INSERT INTO "{TABLE}" (uid, job_type, url_api, db_name, start_time) 
-            values (%s, %s, %s, %s, %s);
-                    """, record)
+    i = 1
+    while os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], filename)):
+        name, extension = os.path.splitext(filename)
+        filename = '%s_%s%s' % (name, str(i), extension)
+        i += 1
 
-        conn.commit()
+    return filename
 
-        return jsonable_encoder({
-            'status': 'success'
-        })
 
-    except Exception as e:
-        print(e)
-        return jsonable_encoder({
-            'status': 'fail',
-            'error': str(e)
-        })
-
-    finally:
-        if conn is not None:
-            conn.close()
-            print('Database connection closed.')
+def compute_metric(class_label=[], predict_1=[], conferences: int = 0):
+    return confusion_matrix(class_label, predict_1)
 
 
 if __name__ == "__main__":
