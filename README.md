@@ -4,7 +4,9 @@
 
     .
     ├── api
-    │   ├── FastAPIDn
+    │   ├── FakeApi
+    │   ├── JobClassificationDBFastAPI
+    │   ├── JobsDBFastAPI
     │   │   ├── api.py
     │   │   ├── config.py
     │   │   ├── database.ini
@@ -22,6 +24,7 @@
     │   │   ├── manifest.json
     │   │   └── robots.txt
     │   ├── src
+    │   │   ├── asserts
     │   │   ├── components
     │   │   ├── config
     │   │   │   ├── db
@@ -29,8 +32,12 @@
     │   │   │   ├── firebase
     │   │   │   │   ├── firebase_connection.js
     │   │   │   │   └── upload_img.js
-    │   │   ├── images
-    │   │   ├── test
+    │   │   ├── hooks
+    │   │   ├── layouts
+    │   │   ├── pages
+    │   │   ├── resources
+    │   │   ├── routers
+    │   │   ├── services
     │   │   ├── utils
     │   │   ├── App.css
     │   │   ├── App.js
@@ -42,21 +49,31 @@
     │   │   └── setupTests.js
     │   ├── package-lock.json
     │   └── package.json
+    ├── database
+    │   ├── ZATools.dump
+    │   └── restore_db.sh
     └── README.md
+
+## Restore database postgres
+
+You need to edit database/restore_db.sh and run:
+`cd database && bash restore_db.sh`
 
 ## Initial environment
 
-`npm install`
 `cd client && npm install`
 
 ## Run API
 
 `cd api/JobsDBFastAPI && bash start_api.sh`
+
 `cd api/JobClassificationDBFastAPI && bash start_api.sh`
+
+`cd api/FakeApi && bash start_api.sh`
 
 ## Run UI React
 
-`npm run start-reactjs`
+`cd client && npm run start`
 
 ## Plan
 
