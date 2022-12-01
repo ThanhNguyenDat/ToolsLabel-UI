@@ -30,11 +30,15 @@ function History({ values }) {
         });
     };
 
-    const fetchJobsAPISubmit = async () => {
+    const fetchJobsAPIgetResult = async () => {
         // call api
         setLoading(true);
+        axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
         const url = 'http://0.0.0.0:8001/getResult';
-        const result = await axios.get(url);
+        var config = {};
+        // const url = '/getResult/';
+        const result = await axios.get(url, config);
+
         console.log('Called API: ', result.data);
         if (result.data.status === 'success') {
             setJobs({ data: result.data.data });
@@ -43,7 +47,7 @@ function History({ values }) {
     };
 
     useEffect(() => {
-        fetchJobsAPISubmit();
+        fetchJobsAPIgetResult();
     }, []);
 
     const expandTypeJobRender = (record) => {
@@ -72,8 +76,6 @@ function History({ values }) {
     };
 
     const onConfirmDeleteJob = async (record) => {
-        // fetchDelete(record);
-
         const url = 'http://0.0.0.0:8001/deleteJob/' + record.id;
         console.log(url);
         const result = await axios.delete(url);

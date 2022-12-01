@@ -19,7 +19,7 @@ function SumResult(id) {
 
     const fetchApi = async () => {
         setLoading(true);
-        const url = 'http://localhost:8001/getResult';
+        const url = 'http://0.0.0.0:8001/getResult';
         const params = {
             params: {
                 id: id.id,
@@ -56,7 +56,7 @@ function DetailResult(id_job) {
     const fetchApi = async () => {
         setLoading(true);
 
-        const url = 'http://localhost:8002/getResult';
+        const url = 'http://0.0.0.0:8002/getResult';
         const params = {
             params: {
                 id_job: id_job.id_job,

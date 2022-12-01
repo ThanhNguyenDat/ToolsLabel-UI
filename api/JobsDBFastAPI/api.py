@@ -20,6 +20,9 @@ app = FastAPI()
 
 origins = ["*"]
 
+# origins = ["https://1fae-171-244-166-188.ap.ngrok.io",
+#            "https://1fae-171-244-166-188.ap.ngrok.io"]
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -40,10 +43,8 @@ async def getResult(id: Union[int, None] = None):
 
         # create a cursor
         cur = conn.cursor()
-        _sub = ['id', 'uid', 'job_name', 'job_type', 'url_api', 'db_name',
-                'total', 'rest', 'skiped', 'stat', 'start_time', 'end_time',
-                'accuracy', 'precision', 'recall', 'f1_score', 'auc_roc', 'log_loss',
-                'tp', 'fp', 'accuracy_tp', 'accuracy_tp', 'map']
+        _sub = ['id', 'uid', 'job_type', 'dataset_id',
+                'url_api', 'progress', 'score']
 
         # cat _sub to string __sub
         __sub = ""
@@ -52,9 +53,9 @@ async def getResult(id: Union[int, None] = None):
         __sub = __sub[2:]
         # execute a statement
         print('id:', id)
-        sql = f"""SELECT {__sub} FROM {TABLE_NAME}"""
+        sql = f"""SELECT {__sub} FROM "Jobs"; """
         if id:
-            sql = f"""SELECT {__sub} FROM {TABLE_NAME} WHERE id={id}"""
+            sql = f"""SELECT {__sub} FROM "Jobs" WHERE id={id}"""
         cur.execute(sql)
         allData = cur.fetchall()
         cur.close()
@@ -67,7 +68,7 @@ async def getResult(id: Union[int, None] = None):
             _sub[i]: data[i] for i in range(len(_sub))
         } for data in allData]
 
-        # print(allData)
+        print(allData)
 
         return jsonable_encoder({
             'status': 'success',
@@ -88,21 +89,23 @@ async def getResult(id: Union[int, None] = None):
 
 
 @app.post("/jobSubmit")
-async def jobSubmit(uid: int = Form(), job_type: str = Form(), url_api: str = Form(), db_name: str = Form()):
+async def jobSubmit(uid: int = Form(), job_type: str = Form(), dataset_id: int = Form, url_api: str = Form()):
     try:
         params = config()
 
         # connect to the PostgreSQL server
         print('Connecting to the PostgreSQL database...')
         conn = psycopg2.connect(**params)
+        # conn = psycopg2.connect()
 
         # create a cursor
         cur = conn.cursor()
 
-        record = (uid, job_type, url_api, db_name, 'now')
+        record = (uid, job_type, dataset_id, url_api, 'now')
         # execute a statement
         sql = f"""
-            INSERT INTO {TABLE_NAME} (uid, job_type, url_api, db_name, start_time) 
+            INSERT INTO "Jobs" ('uid', 'job_type', 'dataset_id',
+                'url_api', 'start_time') 
             values (%s, %s, %s, %s, %s);
         """
         cur.execute(sql, record)

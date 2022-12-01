@@ -82,18 +82,16 @@ async def objectdetection(image: UploadFile = File(None)):
         #     results_json[i]['ymax'] = int(results_json[i]['ymax'])
 
         return jsonable_encoder({
-            "code": 200,
-            "result": results_json,
-            "msg": "Success"
+            "status": "success",
+            "data": results_json,
         })
 
     except Exception as e:
         print(e)
         return jsonable_encoder({
-            "code": 201,
-            "error_code": 0,
-            "msg": str(e)
+            "status": "fail",
+            "data": str(e)
         })
 
 if __name__ == "__main__":
-    uvicorn.run("api:app", host="0.0.0.0", port=8001, reload=True)
+    uvicorn.run("api:app", host="0.0.0.0", port=8003, reload=True)

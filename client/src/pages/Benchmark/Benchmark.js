@@ -8,7 +8,8 @@ import Input from 'antd/lib/input/Input';
 import axios from 'axios';
 
 import styles from './Benchmark.scss';
-import { database_source, typeMetric } from '~/resources';
+import { typeMetric } from '~/resources';
+import { BenchmarkServer } from '~/components/BenchmarkServer';
 
 // import { UploadFile } from '~/components/UploadFile';
 const cx = classNames.bind(styles);
@@ -17,16 +18,20 @@ function Benchmark() {
     const [form] = Form.useForm();
     const [uiDB, setUIDB] = useState();
 
-    const [fileCSV, setFileCSV] = useState();
-    const [array, setArray] = useState([]);
-    const [loadingCSV, setLoadingCSV] = useState(false);
-
     const [progress, setProgress] = useState(0);
     const [messageAPI, contextMsg] = message.useMessage();
+
     const success = (messageAPI) => {
         messageAPI.open({
             type: 'success',
             content: 'Submit successfully',
+        });
+    };
+
+    const error = (messageAPI) => {
+        messageAPI.open({
+            type: 'error',
+            content: 'Submit error',
         });
     };
 
@@ -50,31 +55,28 @@ function Benchmark() {
     const fetchJobsAPISubmit = async (values) => {
         const formData = new FormData();
 
-        if (values) {
-            // console.log('type: ', values.job_type);
+        // 'uid', 'job_type', 'dataset_id',
+        // 'url_api', 'start_time
 
+        if (values) {
             formData.append('uid', 123);
-            formData.append('url_api', values.url_api);
-            formData.append('db_name', values.db_name);
             formData.append('job_type', values.job_type);
+            formData.append('dataset_id', values.dataset_id);
+            formData.append('url_api', values.url_api);
 
             const url = 'http://0.0.0.0:8001/jobSubmit';
             const data = await axios.post(url, formData);
             console.log('Called API: ', data);
             if (data.data.status === 'success') {
                 success(messageAPI);
-            }
-        }
+            } else error(messageAPI);
+        } else error(messageAPI);
     };
 
     const onTypeDBChange = (e) => {
         const type = e.target.value;
-        console.log('Type: ', type);
-
-        if (type === 'typing') {
-            setUIDB(<Input placeholder={'http://example-api.com'} />);
-        } else if (type === 'server') {
-            setUIDB(<Cascader options={database_source} />);
+        if (type === 'server') {
+            setUIDB(<BenchmarkServer />);
         } else if (type === 'upload') {
             setUIDB(
                 <Upload.Dragger
@@ -99,7 +101,7 @@ function Benchmark() {
 
     const onReset = (values) => {
         form.resetFields();
-        setUIDB(<Cascader options={database_source} />);
+        setUIDB(<BenchmarkServer />);
     };
 
     return (
@@ -127,12 +129,11 @@ function Benchmark() {
                         <Radio.Group onChange={onTypeDBChange} defaultValue="server">
                             <Radio.Button value="server">Server</Radio.Button>
                             <Radio.Button value="upload">Upload</Radio.Button>
-                            <Radio.Button value="typing">Typing</Radio.Button>
                         </Radio.Group>
                     </Form.Item>
 
-                    <Form.Item label="Database" name="db_name" va>
-                        {uiDB || <Cascader options={database_source} />}
+                    <Form.Item label="Database" name="dataset_id    " va>
+                        {uiDB || <BenchmarkServer />}
                     </Form.Item>
 
                     <Form.Item
