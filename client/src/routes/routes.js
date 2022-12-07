@@ -22,7 +22,7 @@ const publicRoutes = [
 
     // Benchmark
     { path: config.routes.benchmark, component: Benchmark },
-    { path: config.routes.history, component: History}
+    { path: config.routes.history, component: History },
 ];
 
 const privateRoutes = [];

@@ -17,47 +17,40 @@ function History({ values }) {
             content: 'Delete successfully',
         });
     };
-    const error = () => {
-        messageAPI.open({
-            type: 'error',
-            content: 'This is an error message',
-        });
-    };
-    const warning = () => {
-        messageAPI.open({
-            type: 'warning',
-            content: 'This is a warning message',
-        });
-    };
 
     const fetchJobsAPIgetResult = async () => {
         // call api
+
         setLoading(true);
-        axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-        const url = 'http://0.0.0.0:8001/getResult';
+        const url = 'http://localhost:8001/getResult';
         var config = {};
-        // const url = '/getResult/';
         const result = await axios.get(url, config);
 
-        console.log('Called API: ', result.data);
         if (result.data.status === 'success') {
             setJobs({ data: result.data.data });
         }
+
         setLoading(false);
     };
 
     useEffect(() => {
         fetchJobsAPIgetResult();
+        // const timer = setInterval(() => {
+        // }, 500);
+        // return () => {
+        //     clearInterval(timer);
+        // };
     }, []);
 
     const expandTypeJobRender = (record) => {
         if (record.job_type === 'classification') {
-            return <Classification values={values} id={record.id} />;
+            return <Classification job_id={record.id} dataset_id={record.dataset_id} />;
         } else if (record.job_type === 'object_detection') {
-            return <ObjeactDetection values={values} id={record.id} />;
+            return <ObjeactDetection values={record} id={record.id} />;
         }
     };
 
+    // set icon expand table
     const expandIcon = ({ expanded, onExpand, record }) => {
         // if (record.id > 5) return null;
         return expanded ? (
@@ -76,10 +69,8 @@ function History({ values }) {
     };
 
     const onConfirmDeleteJob = async (record) => {
-        const url = 'http://0.0.0.0:8001/deleteJob/' + record.id;
-        console.log(url);
+        const url = 'http://localhost:8001/deleteJob/' + record.id;
         const result = await axios.delete(url);
-        console.log('status: ', result.data.status);
         if (result.data.status === 'success') {
             const filteredJobs = jobs.data.filter((job) => job.id !== record.id);
             setJobs({ data: [...filteredJobs] });
@@ -104,10 +95,10 @@ function History({ values }) {
                 <Column title="Id" dataIndex={'id'} />
                 <Column title="Job Type" dataIndex={'job_type'} />
                 <Column title="Url API" dataIndex={'url_api'} />
-                <Column title="Database" dataIndex={'db_name'} />
+                <Column title="Database ID" dataIndex={'dataset_id'} />
+                <Column title="Progress" dataIndex={'progress'} />
                 <Column title="start_time" dataIndex={'start_time'} />
                 <Column title="end_time" dataIndex={'end_time'} />
-                <Column title="status" dataIndex={'status'} />
                 <Column
                     title="Action"
                     dataIndex={''}

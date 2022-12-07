@@ -16,18 +16,31 @@ function BenchmarkServer() {
             // mapping data
             const _data = result.data.data;
             _data.forEach((value) => {
-                value['value'] = value['dataset_name'];
+                value['value'] = value['id'];
                 value['label'] = value['dataset_name'];
                 delete value['dataset_name'];
             });
             setData(_data);
-            console.log(_data);
+            console.log('database: ', _data);
         }
     };
 
     return (
         <>
-            <Cascader options={data} />
+            {/* <Cascader options={data} /> */}
+
+            <Cascader
+                options={[
+                    {
+                        value: 1,
+                        label: 'Fake database',
+                    },
+                    {
+                        value: 2,
+                        label: 'Real db',
+                    },
+                ]}
+            />
         </>
     );
 }

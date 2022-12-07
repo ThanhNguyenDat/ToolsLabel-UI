@@ -8,7 +8,7 @@ import numpy as np
 
 from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.encoders import jsonable_encoder
-from fastapi import FastAPI
+from fastapi import Response
 from fastapi.middleware.cors import CORSMiddleware
 
 from config import config
@@ -20,9 +20,6 @@ app = FastAPI()
 
 origins = ["*"]
 
-# origins = ["https://1fae-171-244-166-188.ap.ngrok.io",
-#            "https://1fae-171-244-166-188.ap.ngrok.io"]
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -32,21 +29,21 @@ app.add_middleware(
 )
 
 
-@app.get("/getResult/")
-async def getResult(id: Union[int, None] = None):
+@app.get("/getResult")
+async def getResult(response: Response, id: Union[int, None] = None):
+    # response.headers["X-Cat-Dog"] = "alone in the world"
+    # return "blabla"
     try:
+
         params = config()
 
         # connect to the PostgreSQL server
-        print('Connecting to the PostgreSQL database...')
         conn = psycopg2.connect(**params)
-
         # create a cursor
         cur = conn.cursor()
         _sub = ['id', 'uid', 'job_type', 'dataset_id',
-                'url_api', 'progress', 'score']
+                'url_api', 'progress', 'score', 'start_time', 'end_time']
 
-        # cat _sub to string __sub
         __sub = ""
         for s in _sub:
             __sub = __sub + ", " + s
@@ -55,14 +52,10 @@ async def getResult(id: Union[int, None] = None):
         print('id:', id)
         sql = f"""SELECT {__sub} FROM "Jobs"; """
         if id:
-            sql = f"""SELECT {__sub} FROM "Jobs" WHERE id={id}"""
+            sql = f"""SELECT {__sub} FROM "Jobs" WHERE id={id};"""
         cur.execute(sql)
         allData = cur.fetchall()
         cur.close()
-
-        # # convert tuple to list
-        # allData = [list(data) for data in allData]
-        # print(allData)
 
         allData = [{
             _sub[i]: data[i] for i in range(len(_sub))
@@ -89,12 +82,11 @@ async def getResult(id: Union[int, None] = None):
 
 
 @app.post("/jobSubmit")
-async def jobSubmit(uid: int = Form(), job_type: str = Form(), dataset_id: int = Form, url_api: str = Form()):
+async def jobSubmit(uid: int = Form(), job_type: str = Form(), dataset_id: int = Form(), url_api: str = Form()):
     try:
         params = config()
 
         # connect to the PostgreSQL server
-        print('Connecting to the PostgreSQL database...')
         conn = psycopg2.connect(**params)
         # conn = psycopg2.connect()
 
@@ -104,8 +96,8 @@ async def jobSubmit(uid: int = Form(), job_type: str = Form(), dataset_id: int =
         record = (uid, job_type, dataset_id, url_api, 'now')
         # execute a statement
         sql = f"""
-            INSERT INTO "Jobs" ('uid', 'job_type', 'dataset_id',
-                'url_api', 'start_time') 
+            INSERT INTO "Jobs" (uid, job_type, dataset_id,
+                url_api, start_time) 
             values (%s, %s, %s, %s, %s);
         """
         cur.execute(sql, record)
@@ -127,7 +119,6 @@ async def jobSubmit(uid: int = Form(), job_type: str = Form(), dataset_id: int =
     finally:
         if conn is not None:
             conn.close()
-            print('Database connection closed.')
 
 
 @app.delete("/deleteJob/{id}")
@@ -137,16 +128,17 @@ def deleteJob(id: Union[int, None] = None):
         params = config()
 
         # connect to the PostgreSQL server
-        print('Connecting to the PostgreSQL database...')
         conn = psycopg2.connect(**params)
 
         # create a cursor
         cur = conn.cursor()
 
         # execute a statement
-        sql = f"""DELETE FROM {TABLE_NAME} WHERE id=%s"""
-
-        cur.execute(sql, (id,))
+        sql = f"""
+        DELETE FROM "Jobs" WHERE id=%s; 
+        DELETE FROM "ResultItems" WHERE job_id=%s;
+        """
+        cur.execute(sql, (id, id, ))
         conn.commit()
         cur.close()
 
@@ -163,7 +155,6 @@ def deleteJob(id: Union[int, None] = None):
     finally:
         if conn is not None:
             conn.close()
-            print('Database connection closed.')
 
 
 if __name__ == "__main__":

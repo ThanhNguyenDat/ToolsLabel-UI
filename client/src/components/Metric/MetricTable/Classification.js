@@ -13,7 +13,7 @@ import Column from 'antd/lib/table/Column';
 
 const cx = classNames.bind(styles);
 
-function SumResult(id) {
+function SumResult({ job_id }) {
     const [metrics, setMetrics] = useState([]);
     const [loading, setLoading] = useState(false);
 
@@ -22,7 +22,7 @@ function SumResult(id) {
         const url = 'http://0.0.0.0:8001/getResult';
         const params = {
             params: {
-                id: id.id,
+                id: job_id,
             },
         };
         const _result = await axios.get(url, params);
@@ -49,17 +49,16 @@ function SumResult(id) {
 }
 
 // Detail Result Table
-function DetailResult(id_job) {
+function DetailResult({ job_id, dataset_id }) {
     const [loading, setLoading] = useState(false);
     const [details, setDetails] = useState([]);
-
     const fetchApi = async () => {
         setLoading(true);
 
         const url = 'http://0.0.0.0:8002/getResult';
         const params = {
             params: {
-                id_job: id_job.id_job,
+                dataset_id: dataset_id,
             },
         };
         const _result = await axios.get(url, params);
@@ -68,6 +67,9 @@ function DetailResult(id_job) {
         if (_result.data.status === 'success') {
             setDetails(_result.data.data);
         }
+
+        // Show predict
+
         setLoading(false);
     };
 
@@ -94,34 +96,42 @@ function DetailResult(id_job) {
             onChange={onChange}
             loading={loading}
         >
-            <Column title="URL Image" dataIndex="url_image" render={(text) => <a href={text}>{text}</a>} />
+            <Column
+                title="URL Image"
+                dataIndex="url_image"
+                render={(text) => (
+                    <a href={text} target="_blank" rel="noreferrer">
+                        {text}
+                    </a>
+                )}
+            />
             <Column
                 title="Label"
-                dataIndex="class_label"
+                dataIndex="label"
                 filters={uniqBy(
                     details.map((a) => ({
-                        text: a.class_label?.toString(),
-                        value: a.class_label?.toString(),
+                        text: a.label?.toString(),
+                        value: a.label?.toString(),
                     })),
                     JSON.stringify,
                 ).sort((a, b) => {
                     return a.text - b.text;
                 })}
                 onFilter={(value, record) => {
-                    if (typeof record.class_label !== 'string') {
-                        record.class_label = String(record.class_label);
+                    if (typeof record.label !== 'string') {
+                        record.label = String(record.class_label);
                     }
-                    return record.class_label.startsWith(value);
+                    return record.label.startsWith(value);
                 }}
                 filterSearch={true}
             />
             <Column
                 title="Predict"
-                dataIndex="predict_1"
+                dataIndex="predict"
                 filters={uniqBy(
                     details.map((a) => ({
-                        text: a.predict_1?.toString(),
-                        value: a.predict_1?.toString(),
+                        text: a.predict?.toString(),
+                        value: a.predict?.toString(),
                     })),
                     JSON.stringify,
                 ).sort((a, b) => {
@@ -135,28 +145,23 @@ function DetailResult(id_job) {
                 }}
                 filterSearch={true}
             />
-            <Column
-                title="Conferences"
-                dataIndex="conferences_1"
-                sorter={(a, b) => a.conferences_1 - b.conferences_1}
-            />
         </Table>
     );
 }
 
-function Classification(props) {
-    console.log('values_classfication: ', props);
+function Classification({ job_id, dataset_id }) {
+    console.log('values_classfication: ', job_id, dataset_id);
     return (
         <div>
             <Row>
                 <Divider orientation="left">Summary</Divider>
                 <div className={cx('table-summary-result')}>
-                    <SumResult id={props.id} />
+                    <SumResult job_id={job_id} />
                 </div>
             </Row>
             <Row>
                 <Divider orientation="left">Detail</Divider>
-                <DetailResult id_job={props.id} />
+                <DetailResult job_id={job_id} dataset_id={dataset_id} />
             </Row>
         </div>
     );

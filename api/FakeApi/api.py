@@ -37,64 +37,24 @@ app.add_middleware(
 )
 
 
-@app.post("/getDataset")
-async def getData():
-    try:
-        params = config()
-
-        # connect to the PostgreSQL server
-        print('Connecting to the PostgreSQL database...')
-        conn = psycopg2.connect(**params)
-
-        # create a cursor
-        cur = conn.cursor()
-        _sub = ["id", "dataset_name", "dataset_type"]
-        __sub = ""
-        for s in _sub:
-            __sub = __sub + ", " + s
-        __sub = __sub[2:]
-        # execute a statement
-        sql = f"""SELECT {__sub} FROM "Dataset" """
-        cur.execute(sql)
-        allData = cur.fetchall()
-
-        # # convert tuple to list
-        # allData = [list(data) for data in allData]
-        # print(allData)
-
-        allData = [{
-            _sub[i]: data[i] for i in range(len(_sub))
-        } for data in allData]
-
-        # print(allData)
-
-        return jsonable_encoder({
-            'status': 'success',
-            'data': allData
-        })
-
-    except Exception as e:
-        print(e)
-
-
-@app.post("/classification/")
-async def classification(url: Union[str, None] = None):
+@app.post("/classification")
+async def predict(url_image=Form()):
     try:
         # print("CHECK: ", image)
         # obj = ObjectDetection(image)
-        model = torch.hub.load('ultralytics/yolov5', 'yolov5s')
-        if url is None:
+        if url_image is None:
             return jsonable_encoder({
                 "status": "fail",
-                "data": "url is none"
+                "data": "url_image is none"
             })
 
-        response = requests.get(url)
+        response = requests.get(url_image)
         img_bytes = io.BytesIO(response.content)
         img = PIL.Image.open(img_bytes)
         # nparr = np.frombuffer(img_bytes, np.uint8)
         # img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
         # predict model
+        model = torch.hub.load('ultralytics/yolov5', 'yolov5s')
         results = model(img)
         results_json = json.loads(
             results.pandas().xyxy[0].to_json(orient="records"))

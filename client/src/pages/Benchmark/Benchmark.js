@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import classNames from 'classnames/bind';
 import 'antd/dist/antd.css';
-import { Button, Cascader, Form, Radio, Select, Divider, Progress } from 'antd';
+import { Button, Form, Cascader, Radio, Select, Divider, Progress } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { Upload, message } from 'antd';
 import Input from 'antd/lib/input/Input';
@@ -9,7 +9,7 @@ import axios from 'axios';
 
 import styles from './Benchmark.scss';
 import { typeMetric } from '~/resources';
-import { BenchmarkServer } from '~/components/BenchmarkServer';
+// import { BenchmarkServer } from '~/components/BenchmarkServer';
 
 // import { UploadFile } from '~/components/UploadFile';
 const cx = classNames.bind(styles);
@@ -17,8 +17,10 @@ const cx = classNames.bind(styles);
 function Benchmark() {
     const [form] = Form.useForm();
     const [uiDB, setUIDB] = useState();
+    const [data, setData] = useState([]);
 
     const [progress, setProgress] = useState(0);
+    const [uiProgress, setUIProgress] = useState();
     const [messageAPI, contextMsg] = message.useMessage();
 
     const success = (messageAPI) => {
@@ -35,6 +37,7 @@ function Benchmark() {
         });
     };
 
+    // xử lý ???
     useEffect(() => {
         const timer = setInterval(() => {
             setProgress((oldProgress) => {
@@ -51,19 +54,38 @@ function Benchmark() {
         };
     }, []);
 
+    useEffect(() => {
+        fetchApi();
+    }, []);
+
+    const fetchApi = async () => {
+        const url = 'http://0.0.0.0:8002/getDataset';
+
+        const result = await axios.post(url);
+        if (result.data?.status === 'success') {
+            // mapping data
+            const _data = result.data.data;
+            _data.forEach((value) => {
+                value['value'] = value['id'];
+                value['label'] = value['dataset_name'];
+                delete value['dataset_name'];
+            });
+            setData(_data);
+            console.log('database: ', _data);
+        }
+    };
+
     // submit data
     const fetchJobsAPISubmit = async (values) => {
         const formData = new FormData();
 
-        // 'uid', 'job_type', 'dataset_id',
-        // 'url_api', 'start_time
-
         if (values) {
-            formData.append('uid', 123);
+            formData.append('uid', 1);
             formData.append('job_type', values.job_type);
-            formData.append('dataset_id', values.dataset_id);
-            formData.append('url_api', values.url_api);
+            formData.append('dataset_id', parseInt(values.dataset_id));
 
+            // formData.append('dataset_id', 1);
+            formData.append('url_api', values.url_api);
             const url = 'http://0.0.0.0:8001/jobSubmit';
             const data = await axios.post(url, formData);
             console.log('Called API: ', data);
@@ -71,12 +93,14 @@ function Benchmark() {
                 success(messageAPI);
             } else error(messageAPI);
         } else error(messageAPI);
+        console.log('values: ', values);
     };
 
     const onTypeDBChange = (e) => {
         const type = e.target.value;
         if (type === 'server') {
-            setUIDB(<BenchmarkServer />);
+            // setUIDB(<BenchmarkServer />);
+            setUIDB(<Cascader options={data} />);
         } else if (type === 'upload') {
             setUIDB(
                 <Upload.Dragger
@@ -90,7 +114,7 @@ function Benchmark() {
                     <Button icon={<UploadOutlined />}>Click to Upload</Button>
                 </Upload.Dragger>,
             );
-        }
+        } else setUIDB(<Input />);
     };
 
     const onFinish = (values) => {
@@ -101,7 +125,8 @@ function Benchmark() {
 
     const onReset = (values) => {
         form.resetFields();
-        setUIDB(<BenchmarkServer />);
+        // setUIDB(<BenchmarkServer />);
+        setUIDB(<Cascader options={data} />);
     };
 
     return (
@@ -126,14 +151,15 @@ function Benchmark() {
                     </Form.Item>
 
                     <Form.Item label="Type read database" name="typeReadDB">
-                        <Radio.Group onChange={onTypeDBChange} defaultValue="server">
+                        <Radio.Group onChange={onTypeDBChange}>
                             <Radio.Button value="server">Server</Radio.Button>
                             <Radio.Button value="upload">Upload</Radio.Button>
+                            <Radio.Button value="typing">Typing</Radio.Button>
                         </Radio.Group>
                     </Form.Item>
 
-                    <Form.Item label="Database" name="dataset_id    " va>
-                        {uiDB || <BenchmarkServer />}
+                    <Form.Item label="Database" name="dataset_id">
+                        {uiDB || <Cascader options={data} />}
                     </Form.Item>
 
                     <Form.Item
@@ -166,7 +192,7 @@ function Benchmark() {
                     </Form.Item>
                 </Form>
             </div>
-            <div>
+            {/* <div>
                 <Progress
                     percent={progress}
                     strokeColor={{
@@ -174,8 +200,7 @@ function Benchmark() {
                         to: '#87d068',
                     }}
                 />
-                {/* {uiResult} */}
-            </div>
+            </div> */}
         </div>
     );
 }
