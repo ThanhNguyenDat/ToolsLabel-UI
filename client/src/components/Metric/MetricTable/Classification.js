@@ -19,7 +19,7 @@ function SumResult({ job_id }) {
 
     const fetchApi = async () => {
         setLoading(true);
-        const url = 'http://0.0.0.0:8001/getResult';
+        const url = 'http://0.0.0.0:8001/getJobs';
         const params = {
             params: {
                 id: job_id,
@@ -55,17 +55,18 @@ function DetailResult({ job_id, dataset_id }) {
     const fetchApi = async () => {
         setLoading(true);
 
-        const url = 'http://0.0.0.0:8002/getResult';
         const params = {
             params: {
-                dataset_id: dataset_id,
+                job_id: job_id,
             },
         };
-        const _result = await axios.get(url, params);
 
-        console.log('result_detail: ', _result.data);
-        if (_result.data.status === 'success') {
-            setDetails(_result.data.data);
+        const url_getResultItems = 'http://0.0.0.0:8001/getResultItems';
+        const datasetItems = await axios.get(url_getResultItems, params);
+
+        console.log('result_detail: ', datasetItems.data);
+        if (datasetItems.data.status === 'success') {
+            setDetails(datasetItems.data.data);
         }
 
         // Show predict

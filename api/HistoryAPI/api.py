@@ -29,7 +29,14 @@ app.add_middleware(
 )
 
 
-@app.get("/getResult")
+def list2str(lst):
+    s = ""
+    for i in lst:
+        s = s + ", " + i
+    return s[2:]
+
+
+@app.get("/getJobs")
 async def getResult(response: Response, id: Union[int, None] = None):
     # response.headers["X-Cat-Dog"] = "alone in the world"
     # return "blabla"
@@ -44,10 +51,7 @@ async def getResult(response: Response, id: Union[int, None] = None):
         _sub = ['id', 'uid', 'job_type', 'dataset_id',
                 'url_api', 'progress', 'score', 'start_time', 'end_time']
 
-        __sub = ""
-        for s in _sub:
-            __sub = __sub + ", " + s
-        __sub = __sub[2:]
+        __sub = list2str(_sub)
         # execute a statement
         print('id:', id)
         sql = f"""SELECT {__sub} FROM "Jobs"; """
@@ -79,6 +83,124 @@ async def getResult(response: Response, id: Union[int, None] = None):
         if conn is not None:
             conn.close()
             print('Database connection closed.')
+
+
+@app.get("/getDataset")
+async def getDataset():
+    try:
+        params = config()
+
+        # connect to the PostgreSQL server
+        conn = psycopg2.connect(**params)
+
+        # create a cursor
+        cur = conn.cursor()
+        _sub = ["id", "dataset_name", "dataset_type"]
+        __sub = list2str(_sub)
+        # execute a statement
+        sql = f"""SELECT {__sub} FROM "Dataset" """
+        cur.execute(sql)
+        allData = cur.fetchall()
+
+        allData = [{
+            _sub[i]: data[i] for i in range(len(_sub))
+        } for data in allData]
+
+        # print(allData)
+
+        return jsonable_encoder({
+            'status': 'success',
+            'data': allData
+        })
+
+    except Exception as e:
+        print(e)
+
+    finally:
+        if conn is not None:
+            conn.close()
+
+
+@app.get("/getDatasetItems")
+async def getDataItems(dataset_id: Union[int, None] = None):
+    try:
+        params = config()
+
+        # connect to the PostgreSQL server
+        conn = psycopg2.connect(**params)
+
+        # create a cursor
+        cur = conn.cursor()
+        _sub = ['dataset_id', 'url_image', 'label']
+        __sub = list2str(_sub)
+
+        # execute a statement
+        sql = f"""SELECT {__sub} FROM "DatasetItems" """
+        if dataset_id:
+            sql = f"""SELECT {__sub} FROM "DatasetItems" WHERE dataset_id = {dataset_id}"""
+        cur.execute(sql)
+        allData = cur.fetchall()
+
+        allData = [{
+            _sub[i]: data[i] for i in range(len(_sub))
+        } for data in allData]
+
+        return jsonable_encoder({
+            'status': 'success',
+            'data': allData
+        })
+
+    except Exception as e:
+        print(e)
+        return jsonable_encoder({
+            'status': 'fail',
+            'error': str(e)
+        })
+
+    finally:
+        if conn is not None:
+            conn.close()
+
+
+@app.get("/getResultItems")
+async def getResultItems(job_id: Union[int, None] = None, dataset_id: Union[int, None] = None):
+    try:
+        params = config()
+
+        # connect to the PostgreSQL server
+        conn = psycopg2.connect(**params)
+
+        # create a cursor
+        cur = conn.cursor()
+        _sub = ['"ResultItems"."id"', 'job_id',
+                '"datasetItem_id"', 'url_image', 'label', 'predict']
+        __sub = list2str(_sub)
+
+        # execute a statement
+        sql = f"""SELECT {__sub} from "ResultItems" JOIN "DatasetItems" ON "ResultItems"."datasetItem_id" = "DatasetItems"."id" WHERE "ResultItems"."job_id"={job_id}; """
+        print(sql)
+        cur.execute(sql)
+        allData = cur.fetchall()
+
+        allData = [{
+            _sub[i]: data[i] for i in range(len(_sub))
+        } for data in allData]
+
+        return jsonable_encoder({
+            'status': 'success',
+            'data': allData
+        })
+
+    except Exception as e:
+        print(e)
+        return jsonable_encoder({
+            'status': 'fail',
+            'error': str(e)
+        })
+
+    finally:
+        if conn is not None:
+            conn.close()
 
 
 @app.post("/jobSubmit")

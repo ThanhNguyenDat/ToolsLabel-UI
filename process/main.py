@@ -69,6 +69,6 @@ if __name__ == '__main__':
         try:
             print("Start")
             main()
-            time.sleep(1)
+            time.sleep(3)
         except Exception as e:
             print("ERROR: ", e)

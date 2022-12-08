@@ -59,9 +59,9 @@ function Benchmark() {
     }, []);
 
     const fetchApi = async () => {
-        const url = 'http://0.0.0.0:8002/getDataset';
+        const url = 'http://0.0.0.0:8001/getDataset';
 
-        const result = await axios.post(url);
+        const result = await axios.get(url);
         if (result.data?.status === 'success') {
             // mapping data
             const _data = result.data.data;

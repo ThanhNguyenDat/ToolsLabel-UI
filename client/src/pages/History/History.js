@@ -22,7 +22,7 @@ function History({ values }) {
         // call api
 
         setLoading(true);
-        const url = 'http://localhost:8001/getResult';
+        const url = 'http://localhost:8001/getJobs';
         var config = {};
         const result = await axios.get(url, config);
 
