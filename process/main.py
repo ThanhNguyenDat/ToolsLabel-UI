@@ -1,13 +1,18 @@
 import time
+import requests
 
+from ControlDatabase import *
+from matrix.classification import *
 from utils import *
 
 
 def main():
     # Jobs with progress < 1 -> id, dataset_id, url_api
+
     job_datas = getDataFromDatabase(
-        "Jobs", ['id', 'dataset_id', 'url_api', 'progress'])
-    # print(job_datas)
+        table_name="Jobs",
+        columns=['id', 'dataset_id', 'url_api', 'progress', 'score'])
+
     if job_datas['status'] == 'success':
         for job_data in job_datas['data']:
 
@@ -15,18 +20,25 @@ def main():
             dataset_id = job_data['dataset_id']
             url_api = job_data['url_api']
             progress = job_data['progress']
+            score = job_data['score']
 
-            if not url_ok(url_api):
+            # Check url api http/https
+            if not urlOk(url_api):
                 print(f"url api fail in job_id: {job_id}")
                 continue
 
             # If progress >= 1 (means 100%) and deal with other job
+            # score = None when score'Jobs database haven't had values yet
             if progress >= 1:
+                if score != None:
+                    pass
                 continue
 
             # dataset_id -> url_images from DatasetItems -> List url
             datasetItems = getDataFromDatabase(
-                "DatasetItems", ['id', 'url_image', 'label'], f"dataset_id={dataset_id}")
+                table_name="DatasetItems",
+                columns=['id', 'url_image', 'label'],
+                conditions=f"dataset_id={dataset_id}")
 
             if datasetItems['status'] == 'success':
                 total_image = len(datasetItems['data'])
@@ -42,26 +54,28 @@ def main():
                         predict = response.json()
                     except Exception as e:
                         print("url api fail in job_id:", job_id)
-                        continue
+                        break
 
                     if predict['status'] == 'success':
-                        insertDataIntoDatabase("ResultItems", ['job_id', 'dataset_id', '"datasetItem_id"', 'predict'], (
-                            job_id, dataset_id, dataItem['id'], str(predict['data'])))
+                        # if process = 0.1->0.9?
+                        insertDataIntoDatabase(
+                            table_name="ResultItems",
+                            columns=['job_id', 'dataset_id',
+                                     '"datasetItem_id"', 'predict'],
+                            values=(job_id, dataset_id, dataItem['id'], str(predict['data'])))
 
                         # Update progress of job_id
                         image_predicted += 1
                         new_proress = image_predicted / total_image
                         updateDataFromDatabase(
-                            "Jobs", ["progress"], f"id={job_id}", (new_proress, ))
+                            table_name="Jobs",
+                            columns=["progress"],
+                            conditions=f"id={job_id}",
+                            values=(new_proress, ))
 
                         print(
                             f"Job_id: {job_id} | Dataset_id: {dataset_id} | progress: {new_proress} | label: {dataItem['label']} | predict: {predict['data']}")
 
-                        if new_proress >= 1:
-                            # update end_time and calculator metric
-                            pass
-
-                        # Check progress if == 1 -> calculator score (json) -> update Jobs (score) where job_id
 
 
 if __name__ == '__main__':

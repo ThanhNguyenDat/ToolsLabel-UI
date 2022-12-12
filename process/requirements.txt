@@ -3,6 +3,7 @@ uvicorn
 python-multipart
 python-dotenv
 psycopg2
+scikit-learn
 
 # YOLOv5 requirements
 # Usage: pip install -r requirements.txt
