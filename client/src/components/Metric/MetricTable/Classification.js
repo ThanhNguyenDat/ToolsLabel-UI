@@ -27,7 +27,20 @@ function SumResult({ job_id }) {
         };
         const _result = await axios.get(url, params);
         if (_result.data.status === 'success') {
-            setMetrics({ data: _result.data.data });
+            const score = JSON.parse(_result.data.data[0]['score']);
+            delete score['classification_report']['accuracy'];
+            const classification_report = score['classification_report'];
+            const data = Object.keys(classification_report).map((key, index) => {
+                return {
+                    obj: key,
+                    precision: classification_report[key]['precision'],
+                    recall: classification_report[key]['recall'],
+                    f1_score: classification_report[key]['f1-score'],
+                    support: classification_report[key]['support'],
+                };
+            });
+
+            setMetrics({ data: data });
         }
         setLoading(false);
     };
@@ -38,12 +51,11 @@ function SumResult({ job_id }) {
 
     return (
         <Table dataSource={metrics.data} pagination={false} loading={loading}>
-            <Column title="Accuracy" dataIndex="accuracy" />
+            <Column title="#" dataIndex="obj" />
             <Column title="Precision" dataIndex="precision" />
             <Column title="Recall" dataIndex="recall" />
-            <Column title="F1 Score" dataIndex="f1Score" />
-            <Column title="AUC-ROC" dataIndex="aucRoc" />
-            <Column title="LogLoss" dataIndex="logLoss" />
+            <Column title="F1 Score" dataIndex="f1_score" />
+            <Column title="Support" dataIndex="support" />
         </Table>
     );
 }
@@ -64,7 +76,6 @@ function DetailResult({ job_id, dataset_id }) {
         const url_getResultItems = 'http://0.0.0.0:8001/getResultItems';
         const datasetItems = await axios.get(url_getResultItems, params);
 
-        console.log('result_detail: ', datasetItems.data);
         if (datasetItems.data.status === 'success') {
             setDetails(datasetItems.data.data);
         }

@@ -1,7 +1,8 @@
 import json
-from config import config as configDatabase
+from config_database import config as configDatabase
 import psycopg2
 from .utils import check_key, list2str
+from config import *
 
 
 def parseQuery(**config: dict) -> str:
@@ -13,9 +14,10 @@ def parseQuery(**config: dict) -> str:
     update_flag = check_key(config, 'update_flag')
     join_flag = check_key(config, 'join_flag')
 
-    tableJoin = check_key(config, 'tableJoin')
-    idJoin = check_key(config, 'idJoin')
+    table_join = check_key(config, 'table_join')
+    id_join = check_key(config, 'id_join')
 
+    logger = check_key(config, 'logger')
     _columns = list2str(columns)
 
     # execute a statement
@@ -29,15 +31,16 @@ def parseQuery(**config: dict) -> str:
         if conditions:
             sql += f""" WHERE {conditions}"""
         if join_flag:
-            sql += f""" JOIN {tableJoin} ON {idJoin}"""
+            sql += f""" JOIN {table_join} ON {id_join}"""
+
+    logger.info(f'Query: {sql}')
     return sql
 
 
 def getDataFromDatabase(**config):
     try:
+        logger = check_key(config, 'logger')
         params = configDatabase()
-
-        columns = check_key(config, 'columns')
         # connect to the PostgreSQL server
         conn = psycopg2.connect(**params)
 
@@ -45,25 +48,45 @@ def getDataFromDatabase(**config):
         cur = conn.cursor()
         # columns = ["id", "dataset_id", "url_api"]
         # sql = parseQuery(columns, "Jobs")
-        sql = parseQuery(**config)
+        sql = check_key(config, 'sql')
+
+        if not sql:
+            columns = check_key(config, 'columns')
+            sql = parseQuery(**config)
+        else:
+            columns = []
+            s = False
+            qList = sql.split()
+            for q in qList:
+                if q.upper() == 'SELECT':
+                    s = True
+                    continue
+                if q.upper() in ['FROM']:
+                    s = False
+                if s == True:
+                    q = q if not q[-1] == ',' else q[:-1]
+                    columns.append(q)
+
+        assert type(sql) == str, "Query must be string"
         cur.execute(sql)
         allData = cur.fetchall()
         cur.close()
-        # # convert tuple to list
-        # allData = [list(data) for data in allData]
-        # print(allData)
 
         allData = [{
             columns[i]: data[i] for i in range(len(columns))
         } for data in allData]
+        # else:
+        #     # convert tuple to list
+        #     allData = [list(data) for data in allData]
+        logger.info("get data from database success")
         return {
-            'status': 'success',
+            'status': STATUS_SUCCESS,
             'data': allData
         }
     except Exception as e:
-        print(e)
+        logger.exception(e)
         return {
-            'status': 'fail',
+            'status': STATUS_FAIL,
             'error': e
         }
     finally:
@@ -73,6 +96,7 @@ def getDataFromDatabase(**config):
 
 def insertDataIntoDatabase(**config):
     try:
+        logger = check_key(config, 'logger')
         params = configDatabase()
         config['insert_flag'] = True
         # connect to the PostgreSQL server
@@ -85,13 +109,14 @@ def insertDataIntoDatabase(**config):
         cur.execute(sql, values)
         conn.commit()
         cur.close()
-        print("insert success with :", sql)
+        logger.info("insert success")
         return {
-            'status': 'success'
+            'status': STATUS_SUCCESS
         }
     except Exception as e:
+        logger.exception(e)
         return {
-            'status': 'fail',
+            'status': STATUS_FAIL,
             'error': e
         }
     finally:
@@ -101,6 +126,7 @@ def insertDataIntoDatabase(**config):
 
 def updateDataFromDatabase(**config):
     try:
+        logger = check_key(config, 'logger')
         params = configDatabase()
         config['update_flag'] = True
         # connect to the PostgreSQL server
@@ -108,20 +134,27 @@ def updateDataFromDatabase(**config):
 
         # create a cursor
         cur = conn.cursor()
-        values = check_key(config, 'values')
-        sql = parseQuery(**config)
-        cur.execute(sql, values)
+
+        sql = check_key(config, 'sql')
+        if not sql:
+            sql = parseQuery(**config)
+            values = check_key(config, 'values')
+            cur.execute(sql, values)
+        else:
+            cur.execute(sql)
         conn.commit()
         cur.close()
+
+        logger.info('update success')
         return {
-            'status': 'success'
+            'status': STATUS_SUCCESS
         }
     except Exception as e:
+        logger.exception(e)
         return {
-            'status': 'fail',
+            'status': STATUS_FAIL,
             'error': e
         }
     finally:
         if conn is not None:
             conn.close()
-

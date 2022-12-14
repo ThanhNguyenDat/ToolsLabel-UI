@@ -37,7 +37,7 @@ def list2str(lst):
 
 
 @app.get("/getJobs")
-async def getResult(response: Response, id: Union[int, None] = None):
+async def getResult(id: Union[int, None] = None):
     # response.headers["X-Cat-Dog"] = "alone in the world"
     # return "blabla"
     try:

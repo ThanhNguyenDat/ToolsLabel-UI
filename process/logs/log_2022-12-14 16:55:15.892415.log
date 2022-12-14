@@ -1,0 +1,395 @@
+2022-12-14 16:55:16,414 - WARNING - Starting processing
+2022-12-14 16:55:16,421 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:55:16,421 - INFO - get data from database success
+2022-12-14 16:55:16,422 - ERROR - url api fail in job_id: 25
+2022-12-14 16:55:19,425 - WARNING - Starting processing
+2022-12-14 16:55:19,431 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:55:19,432 - INFO - get data from database success
+2022-12-14 16:55:19,432 - ERROR - url api fail in job_id: 25
+2022-12-14 16:55:22,433 - WARNING - Starting processing
+2022-12-14 16:55:22,440 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:55:22,441 - INFO - get data from database success
+2022-12-14 16:55:22,441 - ERROR - url api fail in job_id: 25
+2022-12-14 16:55:25,442 - WARNING - Starting processing
+2022-12-14 16:55:25,447 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:55:25,448 - INFO - get data from database success
+2022-12-14 16:55:25,448 - ERROR - url api fail in job_id: 25
+2022-12-14 16:55:28,449 - WARNING - Starting processing
+2022-12-14 16:55:28,458 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:55:28,459 - INFO - get data from database success
+2022-12-14 16:55:28,459 - ERROR - url api fail in job_id: 25
+2022-12-14 16:55:31,461 - WARNING - Starting processing
+2022-12-14 16:55:31,478 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:55:31,481 - INFO - get data from database success
+2022-12-14 16:55:31,482 - ERROR - url api fail in job_id: 25
+2022-12-14 16:55:34,485 - WARNING - Starting processing
+2022-12-14 16:55:34,497 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:55:34,500 - INFO - get data from database success
+2022-12-14 16:55:34,505 - ERROR - url api fail in job_id: 25
+2022-12-14 16:55:37,508 - WARNING - Starting processing
+2022-12-14 16:55:37,517 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:55:37,519 - INFO - get data from database success
+2022-12-14 16:55:37,519 - ERROR - url api fail in job_id: 25
+2022-12-14 16:55:40,521 - WARNING - Starting processing
+2022-12-14 16:55:40,531 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:55:40,534 - INFO - get data from database success
+2022-12-14 16:55:40,537 - ERROR - url api fail in job_id: 25
+2022-12-14 16:55:43,541 - WARNING - Starting processing
+2022-12-14 16:55:43,550 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:55:43,552 - INFO - get data from database success
+2022-12-14 16:55:43,552 - ERROR - url api fail in job_id: 25
+2022-12-14 16:55:46,555 - WARNING - Starting processing
+2022-12-14 16:55:46,560 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:55:46,561 - INFO - get data from database success
+2022-12-14 16:55:46,561 - ERROR - url api fail in job_id: 25
+2022-12-14 16:55:49,564 - WARNING - Starting processing
+2022-12-14 16:55:49,570 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:55:49,571 - INFO - get data from database success
+2022-12-14 16:55:49,571 - ERROR - url api fail in job_id: 25
+2022-12-14 16:55:52,573 - WARNING - Starting processing
+2022-12-14 16:55:52,582 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:55:52,583 - INFO - get data from database success
+2022-12-14 16:55:52,583 - ERROR - url api fail in job_id: 25
+2022-12-14 16:55:55,586 - WARNING - Starting processing
+2022-12-14 16:55:55,593 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:55:55,594 - INFO - get data from database success
+2022-12-14 16:55:55,594 - ERROR - url api fail in job_id: 25
+2022-12-14 16:55:58,597 - WARNING - Starting processing
+2022-12-14 16:55:58,606 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:55:58,607 - INFO - get data from database success
+2022-12-14 16:55:58,607 - ERROR - url api fail in job_id: 25
+2022-12-14 16:56:01,609 - WARNING - Starting processing
+2022-12-14 16:56:01,616 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:56:01,617 - INFO - get data from database success
+2022-12-14 16:56:01,617 - ERROR - url api fail in job_id: 25
+2022-12-14 16:56:04,620 - WARNING - Starting processing
+2022-12-14 16:56:04,627 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:56:04,628 - INFO - get data from database success
+2022-12-14 16:56:04,629 - ERROR - url api fail in job_id: 25
+2022-12-14 16:56:07,629 - WARNING - Starting processing
+2022-12-14 16:56:07,636 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:56:07,638 - INFO - get data from database success
+2022-12-14 16:56:07,639 - ERROR - url api fail in job_id: 25
+2022-12-14 16:56:10,641 - WARNING - Starting processing
+2022-12-14 16:56:10,648 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:56:10,649 - INFO - get data from database success
+2022-12-14 16:56:10,649 - ERROR - url api fail in job_id: 25
+2022-12-14 16:56:13,649 - WARNING - Starting processing
+2022-12-14 16:56:13,658 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:56:13,660 - INFO - get data from database success
+2022-12-14 16:56:13,662 - ERROR - url api fail in job_id: 25
+2022-12-14 16:56:16,670 - WARNING - Starting processing
+2022-12-14 16:56:16,682 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:56:16,683 - INFO - get data from database success
+2022-12-14 16:56:16,687 - ERROR - url api fail in job_id: 25
+2022-12-14 16:56:19,689 - WARNING - Starting processing
+2022-12-14 16:56:19,701 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:56:19,704 - INFO - get data from database success
+2022-12-14 16:56:19,708 - ERROR - url api fail in job_id: 25
+2022-12-14 16:56:22,709 - WARNING - Starting processing
+2022-12-14 16:56:22,715 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:56:22,716 - INFO - get data from database success
+2022-12-14 16:56:22,717 - ERROR - url api fail in job_id: 25
+2022-12-14 16:56:25,717 - WARNING - Starting processing
+2022-12-14 16:56:25,725 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:56:25,727 - INFO - get data from database success
+2022-12-14 16:56:25,727 - ERROR - url api fail in job_id: 25
+2022-12-14 16:56:28,729 - WARNING - Starting processing
+2022-12-14 16:56:28,739 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:56:28,741 - INFO - get data from database success
+2022-12-14 16:56:28,746 - ERROR - url api fail in job_id: 25
+2022-12-14 16:56:31,749 - WARNING - Starting processing
+2022-12-14 16:56:31,755 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:56:31,756 - INFO - get data from database success
+2022-12-14 16:56:31,756 - ERROR - url api fail in job_id: 25
+2022-12-14 16:56:34,757 - WARNING - Starting processing
+2022-12-14 16:56:34,766 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:56:34,767 - INFO - get data from database success
+2022-12-14 16:56:34,770 - ERROR - url api fail in job_id: 25
+2022-12-14 16:56:37,773 - WARNING - Starting processing
+2022-12-14 16:56:37,781 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:56:37,783 - INFO - get data from database success
+2022-12-14 16:56:37,783 - ERROR - url api fail in job_id: 25
+2022-12-14 16:56:40,785 - WARNING - Starting processing
+2022-12-14 16:56:40,792 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:56:40,794 - INFO - get data from database success
+2022-12-14 16:56:40,794 - ERROR - url api fail in job_id: 25
+2022-12-14 16:56:43,797 - WARNING - Starting processing
+2022-12-14 16:56:43,804 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:56:43,806 - INFO - get data from database success
+2022-12-14 16:56:43,806 - ERROR - url api fail in job_id: 25
+2022-12-14 16:56:46,808 - WARNING - Starting processing
+2022-12-14 16:56:46,814 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:56:46,814 - INFO - get data from database success
+2022-12-14 16:56:46,815 - ERROR - url api fail in job_id: 25
+2022-12-14 16:56:49,818 - WARNING - Starting processing
+2022-12-14 16:56:49,835 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:56:49,837 - INFO - get data from database success
+2022-12-14 16:56:49,838 - ERROR - url api fail in job_id: 25
+2022-12-14 16:56:52,841 - WARNING - Starting processing
+2022-12-14 16:56:52,857 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:56:52,859 - INFO - get data from database success
+2022-12-14 16:56:52,860 - ERROR - url api fail in job_id: 25
+2022-12-14 16:56:55,861 - WARNING - Starting processing
+2022-12-14 16:56:55,877 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:56:55,880 - INFO - get data from database success
+2022-12-14 16:56:55,880 - ERROR - url api fail in job_id: 25
+2022-12-14 16:56:58,881 - WARNING - Starting processing
+2022-12-14 16:56:58,889 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:56:58,891 - INFO - get data from database success
+2022-12-14 16:56:58,891 - ERROR - url api fail in job_id: 25
+2022-12-14 16:57:01,893 - WARNING - Starting processing
+2022-12-14 16:57:01,898 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:57:01,899 - INFO - get data from database success
+2022-12-14 16:57:01,899 - ERROR - url api fail in job_id: 25
+2022-12-14 16:57:04,901 - WARNING - Starting processing
+2022-12-14 16:57:04,906 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:57:04,907 - INFO - get data from database success
+2022-12-14 16:57:04,907 - ERROR - url api fail in job_id: 25
+2022-12-14 16:57:07,909 - WARNING - Starting processing
+2022-12-14 16:57:07,914 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:57:07,915 - INFO - get data from database success
+2022-12-14 16:57:07,916 - ERROR - url api fail in job_id: 25
+2022-12-14 16:57:10,917 - WARNING - Starting processing
+2022-12-14 16:57:10,924 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:57:10,925 - INFO - get data from database success
+2022-12-14 16:57:10,926 - ERROR - url api fail in job_id: 25
+2022-12-14 16:57:13,929 - WARNING - Starting processing
+2022-12-14 16:57:13,934 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:57:13,935 - INFO - get data from database success
+2022-12-14 16:57:13,935 - ERROR - url api fail in job_id: 25
+2022-12-14 16:57:16,937 - WARNING - Starting processing
+2022-12-14 16:57:16,943 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:57:16,944 - INFO - get data from database success
+2022-12-14 16:57:16,944 - ERROR - url api fail in job_id: 25
+2022-12-14 16:57:19,948 - WARNING - Starting processing
+2022-12-14 16:57:19,953 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:57:19,954 - INFO - get data from database success
+2022-12-14 16:57:19,954 - ERROR - url api fail in job_id: 25
+2022-12-14 16:57:22,957 - WARNING - Starting processing
+2022-12-14 16:57:22,963 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:57:22,965 - INFO - get data from database success
+2022-12-14 16:57:22,965 - ERROR - url api fail in job_id: 25
+2022-12-14 16:57:25,968 - WARNING - Starting processing
+2022-12-14 16:57:25,978 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:57:25,979 - INFO - get data from database success
+2022-12-14 16:57:25,979 - ERROR - url api fail in job_id: 25
+2022-12-14 16:57:28,981 - WARNING - Starting processing
+2022-12-14 16:57:28,987 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:57:28,988 - INFO - get data from database success
+2022-12-14 16:57:28,988 - ERROR - url api fail in job_id: 25
+2022-12-14 16:57:31,989 - WARNING - Starting processing
+2022-12-14 16:57:31,998 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:57:32,000 - INFO - get data from database success
+2022-12-14 16:57:32,001 - ERROR - url api fail in job_id: 25
+2022-12-14 16:57:35,001 - WARNING - Starting processing
+2022-12-14 16:57:35,006 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:57:35,008 - INFO - get data from database success
+2022-12-14 16:57:35,008 - ERROR - url api fail in job_id: 25
+2022-12-14 16:57:38,011 - WARNING - Starting processing
+2022-12-14 16:57:38,016 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:57:38,017 - INFO - get data from database success
+2022-12-14 16:57:38,017 - ERROR - url api fail in job_id: 25
+2022-12-14 16:57:41,020 - WARNING - Starting processing
+2022-12-14 16:57:41,036 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:57:41,039 - INFO - get data from database success
+2022-12-14 16:57:41,039 - ERROR - url api fail in job_id: 25
+2022-12-14 16:57:44,041 - WARNING - Starting processing
+2022-12-14 16:57:44,058 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:57:44,060 - INFO - get data from database success
+2022-12-14 16:57:44,060 - ERROR - url api fail in job_id: 25
+2022-12-14 16:57:47,061 - WARNING - Starting processing
+2022-12-14 16:57:47,067 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:57:47,067 - INFO - get data from database success
+2022-12-14 16:57:47,068 - ERROR - url api fail in job_id: 25
+2022-12-14 16:57:50,071 - WARNING - Starting processing
+2022-12-14 16:57:50,076 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:57:50,077 - INFO - get data from database success
+2022-12-14 16:57:50,077 - ERROR - url api fail in job_id: 25
+2022-12-14 16:57:53,080 - WARNING - Starting processing
+2022-12-14 16:57:53,085 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:57:53,087 - INFO - get data from database success
+2022-12-14 16:57:53,087 - ERROR - url api fail in job_id: 25
+2022-12-14 16:57:56,089 - WARNING - Starting processing
+2022-12-14 16:57:56,094 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:57:56,095 - INFO - get data from database success
+2022-12-14 16:57:56,095 - ERROR - url api fail in job_id: 25
+2022-12-14 16:57:59,099 - WARNING - Starting processing
+2022-12-14 16:57:59,104 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:57:59,105 - INFO - get data from database success
+2022-12-14 16:57:59,105 - ERROR - url api fail in job_id: 25
+2022-12-14 16:58:02,108 - WARNING - Starting processing
+2022-12-14 16:58:02,113 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:58:02,114 - INFO - get data from database success
+2022-12-14 16:58:02,114 - ERROR - url api fail in job_id: 25
+2022-12-14 16:58:05,117 - WARNING - Starting processing
+2022-12-14 16:58:05,122 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:58:05,123 - INFO - get data from database success
+2022-12-14 16:58:05,123 - ERROR - url api fail in job_id: 25
+2022-12-14 16:58:08,125 - WARNING - Starting processing
+2022-12-14 16:58:08,130 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:58:08,131 - INFO - get data from database success
+2022-12-14 16:58:08,132 - ERROR - url api fail in job_id: 25
+2022-12-14 16:58:11,133 - WARNING - Starting processing
+2022-12-14 16:58:11,140 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:58:11,141 - INFO - get data from database success
+2022-12-14 16:58:11,142 - ERROR - url api fail in job_id: 25
+2022-12-14 16:58:14,145 - WARNING - Starting processing
+2022-12-14 16:58:14,151 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:58:14,152 - INFO - get data from database success
+2022-12-14 16:58:14,152 - ERROR - url api fail in job_id: 25
+2022-12-14 16:58:17,153 - WARNING - Starting processing
+2022-12-14 16:58:17,159 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:58:17,160 - INFO - get data from database success
+2022-12-14 16:58:17,161 - ERROR - url api fail in job_id: 25
+2022-12-14 16:58:20,164 - WARNING - Starting processing
+2022-12-14 16:58:20,169 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:58:20,170 - INFO - get data from database success
+2022-12-14 16:58:20,170 - ERROR - url api fail in job_id: 25
+2022-12-14 16:58:23,173 - WARNING - Starting processing
+2022-12-14 16:58:23,183 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:58:23,185 - INFO - get data from database success
+2022-12-14 16:58:23,186 - ERROR - url api fail in job_id: 25
+2022-12-14 16:58:26,189 - WARNING - Starting processing
+2022-12-14 16:58:26,197 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:58:26,198 - INFO - get data from database success
+2022-12-14 16:58:26,199 - ERROR - url api fail in job_id: 25
+2022-12-14 16:58:29,201 - WARNING - Starting processing
+2022-12-14 16:58:29,209 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:58:29,211 - INFO - get data from database success
+2022-12-14 16:58:29,216 - ERROR - url api fail in job_id: 25
+2022-12-14 16:58:32,217 - WARNING - Starting processing
+2022-12-14 16:58:32,223 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:58:32,224 - INFO - get data from database success
+2022-12-14 16:58:32,224 - ERROR - url api fail in job_id: 25
+2022-12-14 16:58:35,225 - WARNING - Starting processing
+2022-12-14 16:58:35,231 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:58:35,232 - INFO - get data from database success
+2022-12-14 16:58:35,233 - ERROR - url api fail in job_id: 25
+2022-12-14 16:58:38,233 - WARNING - Starting processing
+2022-12-14 16:58:38,262 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:58:38,266 - INFO - get data from database success
+2022-12-14 16:58:38,266 - ERROR - url api fail in job_id: 25
+2022-12-14 16:58:41,269 - WARNING - Starting processing
+2022-12-14 16:58:41,276 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:58:41,277 - INFO - get data from database success
+2022-12-14 16:58:41,277 - ERROR - url api fail in job_id: 25
+2022-12-14 16:58:44,277 - WARNING - Starting processing
+2022-12-14 16:58:44,282 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:58:44,283 - INFO - get data from database success
+2022-12-14 16:58:44,283 - ERROR - url api fail in job_id: 25
+2022-12-14 16:58:47,285 - WARNING - Starting processing
+2022-12-14 16:58:47,291 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:58:47,291 - INFO - get data from database success
+2022-12-14 16:58:47,292 - ERROR - url api fail in job_id: 25
+2022-12-14 16:58:50,295 - WARNING - Starting processing
+2022-12-14 16:58:50,303 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:58:50,305 - INFO - get data from database success
+2022-12-14 16:58:50,307 - ERROR - url api fail in job_id: 25
+2022-12-14 16:58:53,311 - WARNING - Starting processing
+2022-12-14 16:58:53,326 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:58:53,328 - INFO - get data from database success
+2022-12-14 16:58:53,329 - ERROR - url api fail in job_id: 25
+2022-12-14 16:58:56,329 - WARNING - Starting processing
+2022-12-14 16:58:56,334 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:58:56,335 - INFO - get data from database success
+2022-12-14 16:58:56,335 - ERROR - url api fail in job_id: 25
+2022-12-14 16:58:59,337 - WARNING - Starting processing
+2022-12-14 16:58:59,342 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:58:59,343 - INFO - get data from database success
+2022-12-14 16:58:59,343 - ERROR - url api fail in job_id: 25
+2022-12-14 16:59:02,345 - WARNING - Starting processing
+2022-12-14 16:59:02,350 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:59:02,351 - INFO - get data from database success
+2022-12-14 16:59:02,351 - ERROR - url api fail in job_id: 25
+2022-12-14 16:59:05,354 - WARNING - Starting processing
+2022-12-14 16:59:05,371 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:59:05,374 - INFO - get data from database success
+2022-12-14 16:59:05,374 - ERROR - url api fail in job_id: 25
+2022-12-14 16:59:08,377 - WARNING - Starting processing
+2022-12-14 16:59:08,383 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:59:08,384 - INFO - get data from database success
+2022-12-14 16:59:08,384 - ERROR - url api fail in job_id: 25
+2022-12-14 16:59:11,387 - WARNING - Starting processing
+2022-12-14 16:59:11,392 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:59:11,393 - INFO - get data from database success
+2022-12-14 16:59:11,393 - ERROR - url api fail in job_id: 25
+2022-12-14 16:59:14,393 - WARNING - Starting processing
+2022-12-14 16:59:14,398 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:59:14,399 - INFO - get data from database success
+2022-12-14 16:59:14,399 - ERROR - url api fail in job_id: 25
+2022-12-14 16:59:17,402 - WARNING - Starting processing
+2022-12-14 16:59:17,420 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:59:17,422 - INFO - get data from database success
+2022-12-14 16:59:17,423 - ERROR - url api fail in job_id: 25
+2022-12-14 16:59:20,425 - WARNING - Starting processing
+2022-12-14 16:59:20,430 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:59:20,431 - INFO - get data from database success
+2022-12-14 16:59:20,431 - ERROR - url api fail in job_id: 25
+2022-12-14 16:59:23,433 - WARNING - Starting processing
+2022-12-14 16:59:23,438 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:59:23,439 - INFO - get data from database success
+2022-12-14 16:59:23,439 - ERROR - url api fail in job_id: 25
+2022-12-14 16:59:26,442 - WARNING - Starting processing
+2022-12-14 16:59:26,447 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:59:26,448 - INFO - get data from database success
+2022-12-14 16:59:26,448 - ERROR - url api fail in job_id: 25
+2022-12-14 16:59:29,451 - WARNING - Starting processing
+2022-12-14 16:59:29,456 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:59:29,457 - INFO - get data from database success
+2022-12-14 16:59:29,457 - ERROR - url api fail in job_id: 25
+2022-12-14 16:59:32,460 - WARNING - Starting processing
+2022-12-14 16:59:32,466 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:59:32,467 - INFO - get data from database success
+2022-12-14 16:59:32,467 - ERROR - url api fail in job_id: 25
+2022-12-14 16:59:35,469 - WARNING - Starting processing
+2022-12-14 16:59:35,474 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:59:35,475 - INFO - get data from database success
+2022-12-14 16:59:35,475 - ERROR - url api fail in job_id: 25
+2022-12-14 16:59:38,477 - WARNING - Starting processing
+2022-12-14 16:59:38,485 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:59:38,486 - INFO - get data from database success
+2022-12-14 16:59:38,487 - ERROR - url api fail in job_id: 25
+2022-12-14 16:59:41,489 - WARNING - Starting processing
+2022-12-14 16:59:41,495 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:59:41,495 - INFO - get data from database success
+2022-12-14 16:59:41,496 - ERROR - url api fail in job_id: 25
+2022-12-14 16:59:44,497 - WARNING - Starting processing
+2022-12-14 16:59:44,503 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:59:44,503 - INFO - get data from database success
+2022-12-14 16:59:44,504 - ERROR - url api fail in job_id: 25
+2022-12-14 16:59:47,505 - WARNING - Starting processing
+2022-12-14 16:59:47,511 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:59:47,512 - INFO - get data from database success
+2022-12-14 16:59:47,512 - ERROR - url api fail in job_id: 25
+2022-12-14 16:59:50,515 - WARNING - Starting processing
+2022-12-14 16:59:50,520 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:59:50,521 - INFO - get data from database success
+2022-12-14 16:59:50,521 - ERROR - url api fail in job_id: 25
+2022-12-14 16:59:53,525 - WARNING - Starting processing
+2022-12-14 16:59:53,530 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:59:53,531 - INFO - get data from database success
+2022-12-14 16:59:53,531 - ERROR - url api fail in job_id: 25
+2022-12-14 16:59:53,537 - INFO - get data from database success
+2022-12-14 16:59:53,549 - INFO - Query: UPDATE "Jobs" SET score = %s WHERE id=19
+2022-12-14 16:59:53,610 - INFO - update success
+2022-12-14 16:59:56,613 - WARNING - Starting processing
+2022-12-14 16:59:56,626 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:59:56,628 - INFO - get data from database success
+2022-12-14 16:59:56,628 - ERROR - url api fail in job_id: 25
+2022-12-14 16:59:59,629 - WARNING - Starting processing
+2022-12-14 16:59:59,647 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 16:59:59,649 - INFO - get data from database success
+2022-12-14 16:59:59,650 - ERROR - url api fail in job_id: 25
+2022-12-14 17:00:02,653 - WARNING - Starting processing
+2022-12-14 17:00:02,658 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 17:00:02,659 - INFO - get data from database success
+2022-12-14 17:00:02,659 - ERROR - url api fail in job_id: 25
+2022-12-14 17:00:05,661 - WARNING - Starting processing
+2022-12-14 17:00:05,666 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 17:00:05,667 - INFO - get data from database success
+2022-12-14 17:00:05,667 - ERROR - url api fail in job_id: 25
+2022-12-14 17:00:08,668 - WARNING - Starting processing
+2022-12-14 17:00:08,673 - INFO - Query: SELECT id, dataset_id, url_api, progress, score FROM "Jobs" 
+2022-12-14 17:00:08,674 - INFO - get data from database success
+2022-12-14 17:00:08,674 - ERROR - url api fail in job_id: 25

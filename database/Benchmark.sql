@@ -33,7 +33,7 @@ CREATE TABLE "Jobs" (
   "dataset_id" SERIAL,
   "url_api" varchar,
   "progress" float default 0,
-  "score" varchar,
+  "score" json,
   "start_time" timestamp,
   "end_time" timestamp
 );
