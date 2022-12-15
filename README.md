@@ -65,15 +65,17 @@ You need to edit database/restore_db.sh and run:
 
 ## Run API
 
-`cd api/JobsDBFastAPI && bash start_api.sh`
-
-`cd api/JobClassificationDBFastAPI && bash start_api.sh`
+`cd api/HistoryAPI && bash start_api.sh`
 
 `cd api/FakeApi && bash start_api.sh`
 
 ## Run UI React
 
 `cd client && npm run start`
+
+## Run process
+
+`cd process && bash start_process_classification.sh`
 
 ## Plan
 

@@ -9,6 +9,7 @@ import axios from 'axios';
 
 import styles from './Benchmark.scss';
 import { typeMetric } from '~/resources';
+import { LOCALHOST_URL } from '~/config';
 // import { BenchmarkServer } from '~/components/BenchmarkServer';
 
 // import { UploadFile } from '~/components/UploadFile';
@@ -20,7 +21,6 @@ function Benchmark() {
     const [data, setData] = useState([]);
 
     const [progress, setProgress] = useState(0);
-    const [uiProgress, setUIProgress] = useState();
     const [messageAPI, contextMsg] = message.useMessage();
 
     const success = (messageAPI) => {
@@ -55,11 +55,11 @@ function Benchmark() {
     }, []);
 
     useEffect(() => {
-        fetchApi();
+        fetchAPIGetDataset();
     }, []);
 
-    const fetchApi = async () => {
-        const url = 'http://0.0.0.0:8001/getDataset';
+    const fetchAPIGetDataset = async () => {
+        const url = `${LOCALHOST_URL}/getDataset`;
 
         const result = await axios.get(url);
         if (result.data?.status === 'success') {
@@ -71,7 +71,6 @@ function Benchmark() {
                 delete value['dataset_name'];
             });
             setData(_data);
-            console.log('database: ', _data);
         }
     };
 
@@ -86,14 +85,12 @@ function Benchmark() {
 
             // formData.append('dataset_id', 1);
             formData.append('url_api', values.url_api);
-            const url = 'http://0.0.0.0:8001/jobSubmit';
+            const url = `${LOCALHOST_URL}/jobSubmit`;
             const data = await axios.post(url, formData);
-            console.log('Called API: ', data);
             if (data.data.status === 'success') {
                 success(messageAPI);
             } else error(messageAPI);
         } else error(messageAPI);
-        console.log('values: ', values);
     };
 
     const onTypeDBChange = (e) => {

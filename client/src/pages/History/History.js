@@ -6,6 +6,7 @@ import axios from 'axios';
 import Classification from '~/components/Metric/MetricTable/Classification';
 import ObjeactDetection from '~/components/Metric/MetricTable/ObjeactDetection';
 import Column from 'antd/lib/table/Column';
+import { LOCALHOST_URL } from '~/config';
 
 function History({ values }) {
     const [jobs, setJobs] = useState([]);
@@ -22,7 +23,7 @@ function History({ values }) {
         // call api
 
         setLoading(true);
-        const url = 'http://localhost:8001/getJobs';
+        const url = `${LOCALHOST_URL}/getJobs`;
         var config = {};
         const result = await axios.get(url, config);
 
@@ -69,7 +70,7 @@ function History({ values }) {
     };
 
     const onConfirmDeleteJob = async (record) => {
-        const url = 'http://localhost:8001/deleteJob/' + record.id;
+        const url = `${LOCALHOST_URL}/deleteJob/` + record.id;
         const result = await axios.delete(url);
         if (result.data.status === 'success') {
             const filteredJobs = jobs.data.filter((job) => job.id !== record.id);
