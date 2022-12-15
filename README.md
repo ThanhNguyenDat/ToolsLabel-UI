@@ -2,8 +2,6 @@
 
 # Table of Contents
 
-===================
-
 <!--ts-->
 
 - [Setup](#setup)
