@@ -1,7 +1,7 @@
 from configparser import ConfigParser
 
 
-def config(filename='database.ini', section='postgresql'):
+def config(filename='config/database.ini', section='postgresql'):
     # create a parser
     parser = ConfigParser()
     # read config file
@@ -18,3 +18,4 @@ def config(filename='database.ini', section='postgresql'):
             'Section {0} not found in the {1} file'.format(section, filename))
 
     return db
+

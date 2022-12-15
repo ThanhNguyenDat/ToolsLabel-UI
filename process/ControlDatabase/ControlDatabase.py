@@ -1,8 +1,8 @@
 import json
-from config_database import config as configDatabase
+from config.database import config as configDatabase
 import psycopg2
 from .utils import check_key, list2str
-from config import *
+from config.constants import *
 
 
 def parseQuery(**config: dict) -> str:

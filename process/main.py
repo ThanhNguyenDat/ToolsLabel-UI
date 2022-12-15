@@ -5,7 +5,7 @@ import logging
 from ControlDatabase import *
 from matrix.classification import *
 from utils import *
-from config import *
+from config.constants import *
 
 logging.basicConfig(level=logging.INFO,
                     format=FORMAT,
@@ -72,7 +72,7 @@ def main():
                 table_name="DatasetItems",
                 columns=['id', 'url_image', 'label'],
                 conditions=f"dataset_id={dataset_id}", logger=logger)
-            print(datasetItems)
+            # print(datasetItems)
             if datasetItems['status'] == STATUS_SUCCESS:
 
                 total_image = len(datasetItems['data'])

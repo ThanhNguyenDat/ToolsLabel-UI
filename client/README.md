@@ -1,6 +1,4 @@
 # UI - REACT
 
-## Run
-`npm install`
-
-`npm run start`
+Examples:
+![alt text](http://url/to/img.png)

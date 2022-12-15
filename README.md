@@ -5,8 +5,8 @@
     .
     ├── api
     │   ├── FakeApi
-    │   ├── JobClassificationDBFastAPI
-    │   ├── JobsDBFastAPI
+    │   ├── UploadFile
+    │   ├── HistoryAPI
     │   │   ├── api.py
     │   │   ├── config.py
     │   │   ├── database.ini
@@ -27,11 +27,6 @@
     │   │   ├── asserts
     │   │   ├── components
     │   │   ├── config
-    │   │   │   ├── db
-    │   │   │   │   └── postgresql_connection.js
-    │   │   │   ├── firebase
-    │   │   │   │   ├── firebase_connection.js
-    │   │   │   │   └── upload_img.js
     │   │   ├── hooks
     │   │   ├── layouts
     │   │   ├── pages
@@ -39,45 +34,85 @@
     │   │   ├── routers
     │   │   ├── services
     │   │   ├── utils
-    │   │   ├── App.css
     │   │   ├── App.js
     │   │   ├── App.test.js
-    │   │   ├── index.css
     │   │   ├── index.js
-    │   │   ├── logo.svg
     │   │   ├── reportWebVitals.js
     │   │   └── setupTests.js
     │   ├── package-lock.json
     │   └── package.json
     ├── database
-    │   ├── ZATools.dump
-    │   └── restore_db.sh
+    │   ├── Benchmark.sql
+    │   ├── dump_db.sh
+    │   ├── restore_db.sh
+    │   └── ZATools.dump
+    ├── process
+    │   ├── config
+    │   │   ├── constants.py
+    │   │   ├── database.ini
+    │   │   └── database.py
+    │   ├── ControlDatabase
+    │   │   ├── __init__.py
+    │   │   ├── ControlDatabase.py
+    │   │   └── utils.py
+    │   ├── logs
+    │   ├── matrix
+    │   │   └── classification.py
+    │   ├── main.py
+    │   ├── requirements.txt
+    │   ├── start_process_classification.sh
+    │   ├── utils.py
+    │   └── yolov5s.pt
     └── README.md
 
-## Restore database postgres
+# Setup
+
+## 1. Initialization Database
 
 You need to edit database/restore_db.sh and run:
-`cd database && bash restore_db.sh`
 
-## Initial environment
+```
+$ cd database && bash restore_db.sh
+```
 
-`cd client && npm install`
+## 2. Initialization environment
+
+```
+$ cd client && npm install
+```
+
+# Start API and UI
 
 ## Run API
 
-`cd api/HistoryAPI && bash start_api.sh`
+API for handle event Benchmark React
 
-`cd api/FakeApi && bash start_api.sh`
+```
+$ cd api/HistoryAPI && bash start_api.sh
+```
 
 ## Run UI React
 
-`cd client && npm run start`
+```
+$ cd client && npm run start
+```
 
 ## Run process
 
-`cd process && bash start_process_classification.sh`
+API for classification:
+
+```
+$ cd api/FakeApi && bash start_api.sh
+```
+
+Run process:
+
+```
+cd process && bash start_process_classification.sh
+```
 
 ## Plan
 
+- compare 2 api
 - firebase <-> React
 - adding api/crawl_data: image from keyword and mp3 from url

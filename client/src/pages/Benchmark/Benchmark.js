@@ -9,7 +9,7 @@ import axios from 'axios';
 
 import styles from './Benchmark.scss';
 import { typeMetric } from '~/resources';
-import { LOCALHOST_URL } from '~/config';
+import { GET_DATASET_URL, JOB_SUBMIT_URL, LOCALHOST_URL } from '~/config';
 // import { BenchmarkServer } from '~/components/BenchmarkServer';
 
 // import { UploadFile } from '~/components/UploadFile';
@@ -59,9 +59,7 @@ function Benchmark() {
     }, []);
 
     const fetchAPIGetDataset = async () => {
-        const url = `${LOCALHOST_URL}/getDataset`;
-
-        const result = await axios.get(url);
+        const result = await axios.get(`${GET_DATASET_URL}`);
         if (result.data?.status === 'success') {
             // mapping data
             const _data = result.data.data;
@@ -82,11 +80,9 @@ function Benchmark() {
             formData.append('uid', 1);
             formData.append('job_type', values.job_type);
             formData.append('dataset_id', parseInt(values.dataset_id));
-
-            // formData.append('dataset_id', 1);
             formData.append('url_api', values.url_api);
-            const url = `${LOCALHOST_URL}/jobSubmit`;
-            const data = await axios.post(url, formData);
+
+            const data = await axios.post(`${JOB_SUBMIT_URL}`, formData);
             if (data.data.status === 'success') {
                 success(messageAPI);
             } else error(messageAPI);
@@ -103,7 +99,7 @@ function Benchmark() {
                 <Upload.Dragger
                     accept=".csv"
                     multiple={false}
-                    action="API_UPLOAD"
+                    action="http://127.0.0.1:5000/upload"
                     onChange={(e) => {
                         console.log(e);
                     }}

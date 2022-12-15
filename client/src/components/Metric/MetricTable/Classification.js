@@ -10,6 +10,7 @@ import styles from './MetricTable.scss';
 
 import axios from 'axios';
 import Column from 'antd/lib/table/Column';
+import { GET_JOBS_URL, GET_RESULT_ITEMS_URL } from '~/config';
 
 const cx = classNames.bind(styles);
 
@@ -19,13 +20,12 @@ function SumResult({ job_id }) {
 
     const fetchApi = async () => {
         setLoading(true);
-        const url = 'http://0.0.0.0:8001/getJobs';
         const params = {
             params: {
                 id: job_id,
             },
         };
-        const _result = await axios.get(url, params);
+        const _result = await axios.get(`${GET_JOBS_URL}`, params);
         if (_result.data.status === 'success') {
             const score = JSON.parse(_result.data.data[0]['score']);
             delete score['classification_report']['accuracy'];
@@ -73,8 +73,7 @@ function DetailResult({ job_id, dataset_id }) {
             },
         };
 
-        const url_getResultItems = 'http://0.0.0.0:8001/getResultItems';
-        const datasetItems = await axios.get(url_getResultItems, params);
+        const datasetItems = await axios.get(`${GET_RESULT_ITEMS_URL}`, params);
 
         if (datasetItems.data.status === 'success') {
             setDetails(datasetItems.data.data);

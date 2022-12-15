@@ -6,7 +6,7 @@ import axios from 'axios';
 import Classification from '~/components/Metric/MetricTable/Classification';
 import ObjeactDetection from '~/components/Metric/MetricTable/ObjeactDetection';
 import Column from 'antd/lib/table/Column';
-import { LOCALHOST_URL } from '~/config';
+import { GET_JOBS_URL, LOCALHOST_URL } from '~/config';
 
 function History({ values }) {
     const [jobs, setJobs] = useState([]);
@@ -23,9 +23,9 @@ function History({ values }) {
         // call api
 
         setLoading(true);
-        const url = `${LOCALHOST_URL}/getJobs`;
+
         var config = {};
-        const result = await axios.get(url, config);
+        const result = await axios.get(`${GET_JOBS_URL}`, config);
 
         if (result.data.status === 'success') {
             setJobs({ data: result.data.data });
@@ -93,12 +93,12 @@ function History({ values }) {
                     expandIcon: expandIcon,
                 }}
             >
-                <Column title="Id" dataIndex={'id'} />
+                <Column title="Id" dataIndex={'id'} sorter={(a, b) => a.id - b.id} />
                 <Column title="Job Type" dataIndex={'job_type'} />
                 <Column title="Url API" dataIndex={'url_api'} />
                 <Column title="Database ID" dataIndex={'dataset_id'} />
                 <Column title="Progress" dataIndex={'progress'} />
-                <Column title="start_time" dataIndex={'start_time'} />
+                <Column title="start_time" dataIndex={'start_time'} sorter={(a, b) => a.start_time - b.start_time} />
                 <Column title="end_time" dataIndex={'end_time'} />
                 <Column
                     title="Action"
