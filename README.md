@@ -69,7 +69,7 @@
 
 ```
 ubuntu: "20.04" or above
-postgres: "~> 14.x"
+postgres: "~> 12.x"
 python: "~> 3.x", file: "requirements.txt"
 node: "~> 16.x", file: "package.json"
 ```
