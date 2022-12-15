@@ -71,7 +71,7 @@
 ubuntu: "20.04" or above
 postgres: "~> 12.x"
 python: "~> 3.6" or above, file: "requirements.txt"
-node: "~> 16.x", file: !["package.json"](https://raw.githubusercontent.com/ThanhNguyenDat/ToolsLabel-UI/main/client/package.json)
+node: "~> 16.x", file: "client/package.json"
 ```
 
 # Setup
