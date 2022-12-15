@@ -1,4 +1,4 @@
-# ToolsLabelUI
+# ToolsLabel-UI
 
 # Table of Contents
 
@@ -11,7 +11,7 @@
   - [Run API](#1-run-api)
   - [Run UI React](#2-run-ui-react)
   - [Run Process](#3-run-process)
-- [Dependency](#ii-dependency)
+- [Dependency](#dependency)
 
 <!--te-->
 
