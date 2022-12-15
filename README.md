@@ -1,78 +1,21 @@
 # ToolsLabelUI
 
-## Work dir
+# Table of Contents
 
-    .
-    ├── api
-    │   ├── FakeApi
-    │   ├── UploadFile
-    │   ├── HistoryAPI
-    │   │   ├── api.py
-    │   │   ├── config.py
-    │   │   ├── database.ini
-    │   │   ├── requirements.txt
-    │   │   └── start_api.sh
-    │   └── object_detection
-    │       ├── api.py
-    │       ├── requirements.txt
-    │       └── start_api.sh
-    ├── client
-    │   ├── node_modules
-    │   ├── public
-    │   │   ├── favicon.ico
-    │   │   ├── index.html
-    │   │   ├── manifest.json
-    │   │   └── robots.txt
-    │   ├── src
-    │   │   ├── asserts
-    │   │   ├── components
-    │   │   ├── config
-    │   │   ├── hooks
-    │   │   ├── layouts
-    │   │   ├── pages
-    │   │   ├── resources
-    │   │   ├── routers
-    │   │   ├── services
-    │   │   ├── utils
-    │   │   ├── App.js
-    │   │   ├── App.test.js
-    │   │   ├── index.js
-    │   │   ├── reportWebVitals.js
-    │   │   └── setupTests.js
-    │   ├── package-lock.json
-    │   └── package.json
-    ├── database
-    │   ├── Benchmark.sql
-    │   ├── dump_db.sh
-    │   ├── restore_db.sh
-    │   └── ZATools.dump
-    ├── process
-    │   ├── config
-    │   │   ├── constants.py
-    │   │   ├── database.ini
-    │   │   └── database.py
-    │   ├── ControlDatabase
-    │   │   ├── __init__.py
-    │   │   ├── ControlDatabase.py
-    │   │   └── utils.py
-    │   ├── logs
-    │   ├── matrix
-    │   │   └── classification.py
-    │   ├── main.py
-    │   ├── requirements.txt
-    │   ├── start_process_classification.sh
-    │   ├── utils.py
-    │   └── yolov5s.pt
-    └── README.md
+===================
 
-# Dependence
+<!--ts-->
 
-```
-ubuntu: "20.04" or above
-postgres: "~> 12.x"
-python: "~> 3.6" or above, file: "requirements.txt"
-node: "~> 16.x", file: "client/package.json"
-```
+- [Setup](#setup)
+  - [Initialization Database](#1-initialization-database)
+  - [Initialization environment](#2-initialization-environment)
+- [Start API and UI](#start-api-and-ui)
+  - [Run API](#1-run-api)
+  - [Run UI React](#2-run-ui-react)
+  - [Run Process](#3-run-process)
+- [Dependency](#ii-dependency)
+
+<!--te-->
 
 # Setup
 
@@ -92,7 +35,7 @@ $ cd client && npm install
 
 # Start API and UI
 
-## Run API
+## 1. Run API
 
 API for handle event Benchmark React
 
@@ -100,13 +43,13 @@ API for handle event Benchmark React
 $ cd api/HistoryAPI && bash start_api.sh
 ```
 
-## Run UI React
+## 2. Run UI React
 
 ```
 $ cd client && npm run start
 ```
 
-## Run process
+## 3. Run process
 
 API for classification:
 
@@ -118,6 +61,15 @@ Run process:
 
 ```
 cd process && bash start_process_classification.sh
+```
+
+# Dependency
+
+```
+ubuntu: "20.04" or above
+postgres: "~> 12.x"
+python: "~> 3.6" or above, file: "requirements.txt"
+node: "~> 16.x", file: "client/package.json"
 ```
 
 ## Plan
