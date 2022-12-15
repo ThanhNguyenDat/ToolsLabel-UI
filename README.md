@@ -65,6 +65,15 @@
     │   └── yolov5s.pt
     └── README.md
 
+# Dependence
+
+```
+ubuntu: "20.04" or above
+postgres: "~> 14.x"
+python: "~> 3.x", file: "requirements.txt"
+node: "~> 16.x", file: "package.json"
+```
+
 # Setup
 
 ## 1. Initialization Database
