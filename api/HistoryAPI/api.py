@@ -14,8 +14,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from config import config
 import psycopg2
 
-TABLE_NAME = '"jobs"'
-
 app = FastAPI()
 
 origins = ["*"]
@@ -53,7 +51,7 @@ async def getResult(id: Union[int, None] = None):
 
         __sub = list2str(_sub)
         # execute a statement
-        print('id:', id)
+        
         sql = f"""SELECT {__sub} FROM "Jobs"; """
         if id:
             sql = f"""SELECT {__sub} FROM "Jobs" WHERE id={id};"""
@@ -64,8 +62,6 @@ async def getResult(id: Union[int, None] = None):
         allData = [{
             _sub[i]: data[i] for i in range(len(_sub))
         } for data in allData]
-
-        print(allData)
 
         return jsonable_encoder({
             'status': 'success',
@@ -163,7 +159,7 @@ async def getDataItems(dataset_id: Union[int, None] = None):
 
 
 @app.get("/getResultItems")
-async def getResultItems(job_id: Union[int, None] = None, dataset_id: Union[int, None] = None):
+async def getResultItems(job_id: Union[int, None] = None):
     try:
         params = config()
 
@@ -172,13 +168,26 @@ async def getResultItems(job_id: Union[int, None] = None, dataset_id: Union[int,
 
         # create a cursor
         cur = conn.cursor()
-        _sub = ['"ResultItems"."id"', 'job_id',
-                '"datasetItem_id"', 'url_image', 'label', 'predict']
+
+        # get type_read_db
+        sql = f"""SELECT type_read_db FROM "Jobs" WHERE id={job_id}; """
+        cur.execute(sql)
+        type_read_db = cur.fetchone()
+        
+        # TABLE_NAME_DATASET = "Dataset" if type_read_db == 'server' else "DatasetUpload"
+        TABLE_NAME_DATASET_ITEMS = "DatasetItems"  if type_read_db == 'server' else "DatasetUploadItems"
+        TABLE_NAME_RESULT_ITEMS = "ResultItems" if type_read_db == 'server' else "ResultUploadItems"
+        
+        _sub = [f'"{TABLE_NAME_RESULT_ITEMS}"."id"', 'job_id',
+                '"dataset_item_id"', 'url_image', 'label', 'predict']
         __sub = list2str(_sub)
 
         # execute a statement
-        sql = f"""SELECT {__sub} from "ResultItems" JOIN "DatasetItems" ON "ResultItems"."datasetItem_id" = "DatasetItems"."id" WHERE "ResultItems"."job_id"={job_id}; """
-        print(sql)
+        sql = f"""SELECT {__sub} FROM "{TABLE_NAME_RESULT_ITEMS}" 
+        JOIN "{TABLE_NAME_DATASET_ITEMS}" 
+          ON "{TABLE_NAME_RESULT_ITEMS}"."dataset_item_id" = "{TABLE_NAME_DATASET_ITEMS}"."id" 
+        WHERE "{TABLE_NAME_RESULT_ITEMS}"."job_id"={job_id}; """
+        
         cur.execute(sql)
         allData = cur.fetchall()
 
@@ -204,7 +213,7 @@ async def getResultItems(job_id: Union[int, None] = None, dataset_id: Union[int,
 
 
 @app.post("/jobSubmit")
-async def jobSubmit(uid: int = Form(), job_type: str = Form(), dataset_id: int = Form(), url_api: str = Form()):
+async def jobSubmit(uid: int = Form(), job_type: str = Form(), type_read_db: str = Form(), dataset_id: int = Form(), url_api: str = Form()):
     try:
         params = config()
 
@@ -215,18 +224,18 @@ async def jobSubmit(uid: int = Form(), job_type: str = Form(), dataset_id: int =
         # create a cursor
         cur = conn.cursor()
 
-        record = (uid, job_type, dataset_id, url_api, 'now')
+        record = (uid, job_type, type_read_db, dataset_id, url_api, 'now')
         # execute a statement
         sql = f"""
-            INSERT INTO "Jobs" (uid, job_type, dataset_id,
+            INSERT INTO "Jobs" (uid, job_type, type_read_db, dataset_id,
                 url_api, start_time) 
-            values (%s, %s, %s, %s, %s);
+            values (%s, %s, %s, %s, %s, %s);
         """
         cur.execute(sql, record)
 
         conn.commit()
         cur.close()
-
+        print('process4')
         return jsonable_encoder({
             'status': 'success'
         })
@@ -243,10 +252,73 @@ async def jobSubmit(uid: int = Form(), job_type: str = Form(), dataset_id: int =
             conn.close()
 
 
+@app.post("/uploadFile")
+async def uploadFile(dataset_id=Form(), url_images=Form(), labels=Form()):
+    try:
+        params = config()
+        dataset_id = int(dataset_id)
+        # connect to the PostgreSQL server
+        conn = psycopg2.connect(**params)
+        # conn = psycopg2.connect()
+        # create a cursor
+        cur = conn.cursor()
+        record = (dataset_id)
+        # execute a statement
+        sql = f"""
+            INSERT INTO "DatasetUpload" (id)
+            values (%s);
+        """
+        
+        cur.execute(sql, (dataset_id,))
+        # convert string to list
+        url_images = url_images.split(',')
+        labels = labels.split(',')
+
+        print(url_images)
+        print(labels)
+        for i in range(len(url_images)-1):
+            url_image = str(url_images[i]).strip()
+            label = labels[i]
+            
+            if url_image: 
+                url_image = f"'{url_image}'"
+                label = f"'{label}'"
+                record = (dataset_id, url_image, label)
+                print("record: ", record)
+
+                # execute a statement
+                sql = f"""
+                    INSERT INTO "DatasetUploadItems" (dataset_id, url_image, label)
+                    values ({dataset_id}, {str(url_image)}, {label});
+                """
+                cur.execute(sql)
+        
+        conn.commit()
+        cur.close()
+
+        return jsonable_encoder({
+            'status': 'success'
+        })
+
+    except Exception as e:
+        print(e)
+        return jsonable_encoder({
+            'status': 'fail',
+            "error": str(e)
+        })
+
+    finally:
+        if conn is not None:
+            conn.close()
+
+
 @app.delete("/deleteJob/{id}")
 # @app.delete("/deleteJob")
 def deleteJob(id: Union[int, None] = None):
-    try:
+    """
+        params: id: job_id of jobs
+    """
+    try: 
         params = config()
 
         # connect to the PostgreSQL server
@@ -256,11 +328,14 @@ def deleteJob(id: Union[int, None] = None):
         cur = conn.cursor()
 
         # execute a statement
+        
         sql = f"""
         DELETE FROM "Jobs" WHERE id=%s; 
         DELETE FROM "ResultItems" WHERE job_id=%s;
+        DELETE FROM "ResultUploadItems" WHERE job_id=%s;
         """
-        cur.execute(sql, (id, id, ))
+
+        cur.execute(sql, (id, id, id, ))
         conn.commit()
         cur.close()
 

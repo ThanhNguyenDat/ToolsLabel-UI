@@ -6,10 +6,12 @@ import { UploadOutlined } from '@ant-design/icons';
 import { Upload, message } from 'antd';
 import Input from 'antd/lib/input/Input';
 import axios from 'axios';
+import Papa from 'papaparse';
 
 import styles from './Benchmark.scss';
 import { typeMetric } from '~/resources';
 import { GET_DATASET_URL, JOB_SUBMIT_URL, LOCALHOST_URL } from '~/config';
+import UploadCSVFile from '~/components/UploadFile/CSVFile';
 // import { BenchmarkServer } from '~/components/BenchmarkServer';
 
 // import { UploadFile } from '~/components/UploadFile';
@@ -18,7 +20,9 @@ const cx = classNames.bind(styles);
 function Benchmark() {
     const [form] = Form.useForm();
     const [uiDB, setUIDB] = useState();
+    const [typeReadDB, setTypeReadDB] = useState('server');
     const [data, setData] = useState([]);
+    const [dataUpload, setDataUpload] = useState([]);
 
     const [progress, setProgress] = useState(0);
     const [messageAPI, contextMsg] = message.useMessage();
@@ -37,7 +41,9 @@ function Benchmark() {
         });
     };
 
-    // xử lý ???
+    useEffect(() => {}, [typeReadDB]);
+
+    // xử lý progress ???
     useEffect(() => {
         const timer = setInterval(() => {
             setProgress((oldProgress) => {
@@ -74,19 +80,58 @@ function Benchmark() {
 
     // submit data
     const fetchJobsAPISubmit = async (values) => {
-        const formData = new FormData();
+        const formDataJob = new FormData();
 
         if (values) {
-            formData.append('uid', 1);
-            formData.append('job_type', values.job_type);
-            formData.append('dataset_id', parseInt(values.dataset_id));
-            formData.append('url_api', values.url_api);
+            formDataJob.append('uid', 1);
+            formDataJob.append('job_type', values.job_type);
+            formDataJob.append('type_read_db', typeReadDB);
+            if (typeReadDB === 'server') {
+                formDataJob.append('dataset_id', parseInt(values.dataset_id));
+            } else if (typeReadDB === 'upload') {
+                const formDataUpload = new FormData();
+                var utc = new Date().getTime();
+                console.log('utc:', typeof utc);
 
-            const data = await axios.post(`${JOB_SUBMIT_URL}`, formData);
+                formDataJob.append('dataset_id', utc);
+
+                var url_images = dataUpload.map((data) => {
+                    return data[0];
+                });
+                var labels = dataUpload.map((data) => {
+                    return data[1];
+                });
+
+                formDataUpload.append('dataset_id', utc);
+
+                formDataUpload.append('url_images', url_images);
+                formDataUpload.append('labels', labels);
+
+                const status = await axios.post(`${LOCALHOST_URL}/uploadFile`, formDataUpload);
+                console.log('status: ', status);
+            }
+            formDataJob.append('url_api', values.url_api);
+
+            const data = await axios.post(`${JOB_SUBMIT_URL}`, formDataJob);
             if (data.data.status === 'success') {
                 success(messageAPI);
             } else error(messageAPI);
         } else error(messageAPI);
+    };
+
+    const handleFileUpload = (e) => {
+        const files = e.target.files;
+        // console.log(files);
+        if (files) {
+            // console.log(files[0]);
+            Papa.parse(files[0], {
+                complete: function (results) {
+                    console.log('Finished:', results.data);
+                    console.log('Len: ', results.data.length);
+                    setDataUpload(results.data);
+                },
+            });
+        }
     };
 
     const onTypeDBChange = (e) => {
@@ -94,24 +139,28 @@ function Benchmark() {
         if (type === 'server') {
             // setUIDB(<BenchmarkServer />);
             setUIDB(<Cascader options={data} />);
+            setTypeReadDB('server');
         } else if (type === 'upload') {
-            setUIDB(
-                <Upload.Dragger
-                    accept=".csv"
-                    multiple={false}
-                    action="http://127.0.0.1:5000/upload"
-                    onChange={(e) => {
-                        console.log(e);
-                    }}
-                >
-                    <Button icon={<UploadOutlined />}>Click to Upload</Button>
-                </Upload.Dragger>,
-            );
+            // setUIDB(
+            //     <Upload.Dragger
+            //         accept=".csv"
+            //         multiple={false}
+            //         action="http://127.0.0.1:5000/upload"
+            //         onChange={(e) => {
+            //             console.log(e);
+            //         }}
+            //     >
+            //         <Button icon={<UploadOutlined />}>Click to Upload</Button>
+            //     </Upload.Dragger>,
+            // );
+            setUIDB(<Input type="file" accept=".csv" onChange={handleFileUpload} />);
+            setTypeReadDB('upload');
         } else setUIDB(<Input />);
     };
 
     const onFinish = (values) => {
         console.log('values: ', values);
+        console.log('typeReadDB: ', typeReadDB);
         fetchJobsAPISubmit(values);
         onReset(values);
     };
@@ -119,6 +168,7 @@ function Benchmark() {
     const onReset = (values) => {
         form.resetFields();
         // setUIDB(<BenchmarkServer />);
+        setTypeReadDB('server');
         setUIDB(<Cascader options={data} />);
     };
 
@@ -144,7 +194,7 @@ function Benchmark() {
                     </Form.Item>
 
                     <Form.Item label="Type read database" name="typeReadDB">
-                        <Radio.Group onChange={onTypeDBChange}>
+                        <Radio.Group onChange={onTypeDBChange} defaultValue="server">
                             <Radio.Button value="server">Server</Radio.Button>
                             <Radio.Button value="upload">Upload</Radio.Button>
                             <Radio.Button value="typing">Typing</Radio.Button>

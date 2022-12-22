@@ -9,10 +9,9 @@ source venv/bin/activate
 
 # Just install dependencies by default to pick up any changes
 pip install -r requirements.txt
-# npm install mysql
 
 #
 # run the data server
 #
 # uvicorn api:app --reload
-python3 main.py
+python3 main_process.py

@@ -97,19 +97,20 @@ def getDataFromDatabase(**config):
 def insertDataIntoDatabase(**config):
     try:
         logger = check_key(config, 'logger')
+        logger.info("START INSERT")
         params = configDatabase()
         config['insert_flag'] = True
         # connect to the PostgreSQL server
         conn = psycopg2.connect(**params)
-
         # create a cursor
         cur = conn.cursor()
         values = check_key(config, 'values')
         sql = parseQuery(**config)
+        logger.info(f"SQL: {sql}")
         cur.execute(sql, values)
         conn.commit()
         cur.close()
-        logger.info("insert success")
+        logger.info("INSERT DONE")
         return {
             'status': STATUS_SUCCESS
         }
