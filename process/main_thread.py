@@ -15,8 +15,17 @@ logger = logging.getLogger('process')
 # d = {'clientip': '192.168.0.1', 'user': 'fbloggs'}
 # logger.warning('Protocol problem: %s', 'connection reset', extra=d)
 
+def predict_model(dataItem, url_api):
+    # Predict and insert into ResultItems database
+    data = {
+        'url_image': dataItem['url_image']
+    }
+    response = requests.post(
+        url_api, data=data)
+    return response.json()
 
-def main(job_data):
+
+def run_process(job_data):
     # Jobs with progress < 1 -> id, dataset_id, url_api
     # job_datas = getDataFromDatabase(
     #     table_name="Jobs",
@@ -25,7 +34,8 @@ def main(job_data):
 
     # if job_datas['status'] == STATUS_SUCCESS:
     #     for job_data in job_datas['data']:
-            # get information in Job's database
+    
+    # get information in Job's database
     job_id = job_data['id']
     dataset_id = job_data['dataset_id']
     url_api = job_data['url_api']
@@ -45,66 +55,57 @@ def main(job_data):
 
     # If progress >= 1 (means 100%) and deal with other job
     # score = None when score'Jobs database haven't had values yet
-    if progress >= 1:
-        if score == None:
-            # get full data
-            
-            sql = f"""
-                SELECT "{TABLE_NAME_RESULT_ITEMS}"."id", url_image, label, predict
-                FROM "{TABLE_NAME_RESULT_ITEMS}"
-                    JOIN "{TABLE_NAME_DATASET_ITEMS}" ON "{TABLE_NAME_DATASET_ITEMS}"."id"="{TABLE_NAME_RESULT_ITEMS}"."dataset_item_id"
-                WHERE "{TABLE_NAME_RESULT_ITEMS}"."job_id"={job_id}
-                ;
-            """
+    
+    if score == None and progress >= 1:
+        # get full data
+        sql = f"""
+            SELECT "{TABLE_NAME_RESULT_ITEMS}"."id", url_image, label, predict
+            FROM "{TABLE_NAME_RESULT_ITEMS}"
+                JOIN "{TABLE_NAME_DATASET_ITEMS}" ON "{TABLE_NAME_DATASET_ITEMS}"."id"="{TABLE_NAME_RESULT_ITEMS}"."dataset_item_id"
+            WHERE "{TABLE_NAME_RESULT_ITEMS}"."job_id"={job_id}
+            ;
+        """
 
-            label = []
-            predict = []
-            data = getDataFromDatabase(sql=sql, logger=logger)
-            if data['status'] == STATUS_SUCCESS:
-                for da in data['data']:
-                    label.append(da['label'])
-                    predict.append(da['predict'])
+        label = []
+        predict = []
+        data = getDataFromDatabase(sql=sql, logger=logger)
+        if data['status'] == STATUS_SUCCESS:
+            for da in data['data']:
+                label.append(da['label'])
+                predict.append(da['predict'])
 
-            report = calculate_score(label, predict)
-            report = str(report).replace("'", '"')
+        report = calculate_score(label, predict)
+        report = str(report).replace("'", '"')
 
-            data = updateDataFromDatabase(
-                table_name="Jobs",
-                columns=["score"],
-                conditions=f"id={job_id}",
-                values=(report, ),
-                logger=logger)
-        # continue
-        return
+        data = updateDataFromDatabase(
+            table_name="Jobs",
+            columns=["score"],
+            conditions=f"id={job_id}",
+            values=(report, ),
+            logger=logger)
+    
     # dataset_id -> url_images from DatasetItems -> List url
     datasetItems = getDataFromDatabase(
         table_name=TABLE_NAME_DATASET_ITEMS,
         columns=['id', 'url_image', 'label'],
         conditions=f"dataset_id={dataset_id}", logger=logger)
-    # print(datasetItems)
+    
     if datasetItems['status'] == STATUS_SUCCESS:
-
         total_image = len(datasetItems['data'])
         image_predicted = progress * total_image
         for dataItem in datasetItems['data']:
             try:
                 image_predicted += 1
                 new_proress = image_predicted / total_image
-
-                # Predict and insert into ResultItems database
-                data = {
-                    'url_image': dataItem['url_image']
-                }
-                response = requests.post(
-                    url_api, data=data)
-                predict = response.json()
+                
+                predict = predict_model(dataItem, url_api)
+                
                 logger.info(f"Predict: {predict}")
             except Exception as e:
                 logger.exception(f"url api fail in job_id: {job_id} with error: {e}")
                 break
 
             if predict['status'] == STATUS_SUCCESS:
-                # if process = 0.1->0.9?
                 data = insertDataIntoDatabase(
                     table_name=TABLE_NAME_RESULT_ITEMS,
                     columns=['job_id', 'dataset_id',
@@ -113,16 +114,16 @@ def main(job_data):
                             dataItem['id'], str(predict['data'])),
                     logger=logger)
 
-                # Update progress of job_id
-                data = updateDataFromDatabase(
-                    table_name="Jobs",
-                    columns=["progress"],
-                    conditions=f"id={job_id}",
-                    values=(new_proress, ),
-                    logger=logger)
+            # Update progress of job_id
+            data = updateDataFromDatabase(
+                table_name="Jobs",
+                columns=["progress"],
+                conditions=f"id={job_id}",
+                values=(new_proress, ),
+                logger=logger)
 
-                logger.info(
-                    f"Job_id: {job_id} | Dataset_id: {dataset_id} | Dataset_items_id: {dataItem['id']} | progress: {new_proress} | label: {dataItem['label']} | predict: {predict['data']}")
+            logger.info(
+                f"Job_id: {job_id} | Dataset_id: {dataset_id} | Dataset_items_id: {dataItem['id']} | progress: {new_proress} | label: {dataItem['label']} | predict: {predict['data']}")
 
 
 if __name__ == '__main__':
@@ -134,9 +135,11 @@ if __name__ == '__main__':
                 table_name="Jobs",
                 columns=['id', 'dataset_id', 'url_api', 'progress', 'score', 'type_read_db'],
                 logger=logger)
+            
             if job_datas['status'] == STATUS_SUCCESS:
             # for job_data in job_datas['data']:
-                pool_worker(main, job_datas['data'])
-            time.sleep(3)
+                datas = [data for data in job_datas['data'] if (data['progress'] < 1 or data['score'] == None)]
+                
+                pool_worker(run_process, datas, use_thread=True, num_worker=8)
         except Exception as e:
             logger.exception(e)
