@@ -30,7 +30,12 @@ def main():
             url_api = job_data['url_api']
             progress = job_data['progress']
             score = job_data['score']
-
+            type_read_db = job_data['type_read_db']
+            
+            TABLE_NAME_DATASET = "Dataset" if type_read_db == 'server' else "DatasetUpload"
+            TABLE_NAME_DATASET_ITEMS = "DatasetItems"  if type_read_db == 'server' else "DatasetUploadItems"
+            TABLE_NAME_RESULT_ITEMS = "ResultItems" if type_read_db == 'server' else "ResultUploadItems"
+            
             # Check url api http/https
             if not urlOk(url_api):
                 logger.error(f"url api fail in job_id: {job_id}")
@@ -41,11 +46,12 @@ def main():
             if progress >= 1:
                 if score == None:
                     # get full data
+                    
                     sql = f"""
-                        SELECT "ResultItems"."id", url_image, label, predict
-                        FROM "ResultItems"
-                            JOIN "DatasetItems" ON "DatasetItems"."id"="ResultItems"."datasetItem_id"
-                        WHERE "ResultItems"."job_id"={job_id}
+                        SELECT "{TABLE_NAME_RESULT_ITEMS}"."id", url_image, label, predict
+                        FROM "{TABLE_NAME_RESULT_ITEMS}"
+                            JOIN "{TABLE_NAME_DATASET_ITEMS}" ON "{TABLE_NAME_DATASET_ITEMS}"."id"="{TABLE_NAME_RESULT_ITEMS}"."dataset_item_id"
+                        WHERE "{TABLE_NAME_RESULT_ITEMS}"."job_id"={job_id}
                         ;
                     """
 
@@ -69,7 +75,7 @@ def main():
                 continue
             # dataset_id -> url_images from DatasetItems -> List url
             datasetItems = getDataFromDatabase(
-                table_name="DatasetItems",
+                table_name=TABLE_NAME_DATASET_ITEMS,
                 columns=['id', 'url_image', 'label'],
                 conditions=f"dataset_id={dataset_id}", logger=logger)
             # print(datasetItems)
@@ -79,6 +85,9 @@ def main():
                 image_predicted = progress * total_image
                 for dataItem in datasetItems['data']:
                     try:
+                        image_predicted += 1
+                        new_proress = image_predicted / total_image
+
                         # Predict and insert into ResultItems database
                         data = {
                             'url_image': dataItem['url_image']
@@ -86,23 +95,22 @@ def main():
                         response = requests.post(
                             url_api, data=data)
                         predict = response.json()
+                        logger.info(f"Predict: {predict}")
                     except Exception as e:
-                        logger.exception("url api fail in job_id: ", job_id)
+                        logger.exception(f"url api fail in job_id: {job_id} with error: {e}")
                         break
 
                     if predict['status'] == STATUS_SUCCESS:
                         # if process = 0.1->0.9?
                         data = insertDataIntoDatabase(
-                            table_name="ResultItems",
+                            table_name=TABLE_NAME_RESULT_ITEMS,
                             columns=['job_id', 'dataset_id',
-                                     '"datasetItem_id"', 'predict'],
+                                     '"dataset_item_id"', 'predict'],
                             values=(job_id, dataset_id,
                                     dataItem['id'], str(predict['data'])),
                             logger=logger)
 
                         # Update progress of job_id
-                        image_predicted += 1
-                        new_proress = image_predicted / total_image
                         data = updateDataFromDatabase(
                             table_name="Jobs",
                             columns=["progress"],
@@ -111,7 +119,7 @@ def main():
                             logger=logger)
 
                         logger.info(
-                            f"Job_id: {job_id} | Dataset_id: {dataset_id} | progress: {new_proress} | label: {dataItem['label']} | predict: {predict['data']}")
+                            f"Job_id: {job_id} | Dataset_id: {dataset_id} | Dataset_items_id: {dataItem['id']} | progress: {new_proress} | label: {dataItem['label']} | predict: {predict['data']}")
 
 
 if __name__ == '__main__':

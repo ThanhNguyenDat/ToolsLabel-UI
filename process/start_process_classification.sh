@@ -14,4 +14,4 @@ pip install -r requirements.txt
 # run the data server
 #
 # uvicorn api:app --reload
-python3 main_process.py
+python3 main_thread.py
