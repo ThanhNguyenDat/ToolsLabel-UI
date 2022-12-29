@@ -6,14 +6,14 @@ CREATE TABLE "User" (
 );
 
 CREATE TABLE "Dataset" (
-  "id" SERIAL PRIMARY KEY,
+  "id" BIGINT PRIMARY KEY,
   "dataset_name" varchar,
   "dataset_type" varchar
 );
 
 CREATE TABLE "DatasetItems" (
   "id" SERIAL PRIMARY KEY,
-  "dataset_id" SERIAL,
+  "dataset_id" BIGINT,
   "url_image" varchar,
   "label" varchar
 );
@@ -21,7 +21,7 @@ CREATE TABLE "DatasetItems" (
 CREATE TABLE "ResultItems" (
   "id" SERIAL PRIMARY KEY,
   "job_id" SERIAL,
-  "dataset_id" SERIAL,
+  "dataset_id" BIGINT,
   "datasetItem_id" SERIAL,
   "predict" varchar
 );
@@ -30,7 +30,7 @@ CREATE TABLE "Jobs" (
   "id" SERIAL PRIMARY KEY,
   "uid" SERIAL,
   "job_type" varchar,
-  "dataset_id" SERIAL,
+  "dataset_id" BIGINT,
   "url_api" varchar,
   "progress" float default 0,
   "score" json,
@@ -39,22 +39,23 @@ CREATE TABLE "Jobs" (
 );
 
 CREATE TABLE "DatasetUpload" (
-  "id" SERIAL PRIMARY KEY,
+  "id" BIGINT PRIMARY KEY,
   "dataset_name" varchar,
   "dataset_type" varchar
 );
 
 CREATE TABLE "DatasetUploadItems" (
   "id" SERIAL PRIMARY KEY,
-  "dataset_id" SERIAL,
+  "dataset_id" BIGINT,
   "url_image" varchar,
   "label" varchar
 );
 
-CREATE TABLE "ResultUploadItems" (
+CREATE TABLE "ResulUploadtItems" (
   "id" SERIAL PRIMARY KEY,
   "job_id" SERIAL,
-  "datasetUploadItem" SERIAL,
+  "dataset_id" BIGINT,
+  "datasetItem_id" SERIAL,
   "predict" varchar
 );
 
