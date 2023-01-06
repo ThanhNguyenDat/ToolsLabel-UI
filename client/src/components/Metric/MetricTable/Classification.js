@@ -30,6 +30,7 @@ function SumResult({ job_id }) {
             const score = JSON.parse(_result.data.data[0]['score']);
             delete score['classification_report']['accuracy'];
             const classification_report = score['classification_report'];
+            
             const data = Object.keys(classification_report).map((key, index) => {
                 return {
                     obj: key,
@@ -93,8 +94,8 @@ function DetailResult({ job_id, dataset_id }) {
         console.log(
             'Map: ',
             details.map((a) => ({
-                text: a.predict_1,
-                value: a.predict_1,
+                text: a.predict,
+                value: a.predict,
             })),
         );
     };
@@ -179,3 +180,7 @@ function Classification({ job_id, dataset_id }) {
 }
 
 export default Classification;
+
+// tim hieu precision recall
+// gui schema
+// 

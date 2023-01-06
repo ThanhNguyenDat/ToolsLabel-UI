@@ -22,6 +22,7 @@ def predict_model(dataItem, url_api):
     }
     response = requests.post(
         url_api, data=data)
+    
     return response.json()
 
 
@@ -43,6 +44,7 @@ def run_process(job_data):
     score = job_data['score']
     type_read_db = job_data['type_read_db']
     
+    # Choose name based on type_read_db
     TABLE_NAME_DATASET = "Dataset" if type_read_db == 'server' else "DatasetUpload"
     TABLE_NAME_DATASET_ITEMS = "DatasetItems"  if type_read_db == 'server' else "DatasetUploadItems"
     TABLE_NAME_RESULT_ITEMS = "ResultItems" if type_read_db == 'server' else "ResultUploadItems"
@@ -77,7 +79,7 @@ def run_process(job_data):
         report = calculate_score(label, predict)
         report = str(report).replace("'", '"')
 
-        data = updateDataFromDatabase(
+        _ = updateDataFromDatabase(
             table_name="Jobs",
             columns=["score"],
             conditions=f"id={job_id}",
@@ -106,7 +108,7 @@ def run_process(job_data):
                 break
 
             if predict['status'] == STATUS_SUCCESS:
-                data = insertDataIntoDatabase(
+                _ = insertDataIntoDatabase(
                     table_name=TABLE_NAME_RESULT_ITEMS,
                     columns=['job_id', 'dataset_id',
                                 '"dataset_item_id"', 'predict'],
@@ -115,7 +117,7 @@ def run_process(job_data):
                     logger=logger)
 
             # Update progress of job_id
-            data = updateDataFromDatabase(
+            _ = updateDataFromDatabase(
                 table_name="Jobs",
                 columns=["progress"],
                 conditions=f"id={job_id}",
@@ -137,9 +139,9 @@ if __name__ == '__main__':
                 logger=logger)
             
             if job_datas['status'] == STATUS_SUCCESS:
-            # for job_data in job_datas['data']:
-                datas = [data for data in job_datas['data'] if (data['progress'] < 1 or data['score'] == None)]
+                # Get job with progres < 1 or score = None
+                jobs = [data for data in job_datas['data'] if (data['progress'] < 1 or data['score'] == None)]
                 
-                pool_worker(run_process, datas, use_thread=True, num_worker=8)
+                pool_worker(run_process, jobs, use_thread=True, num_worker=8)
         except Exception as e:
             logger.exception(e)

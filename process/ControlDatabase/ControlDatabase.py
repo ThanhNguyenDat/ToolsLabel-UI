@@ -4,7 +4,6 @@ import psycopg2
 from .utils import check_key, list2str
 from config.constants import *
 
-
 def parseQuery(**config: dict) -> str:
     table_name = check_key(config, 'table_name')
     columns = check_key(config, 'columns')
@@ -32,8 +31,6 @@ def parseQuery(**config: dict) -> str:
             sql += f""" WHERE {conditions}"""
         if join_flag:
             sql += f""" JOIN {table_join} ON {id_join}"""
-
-    logger.info(f'Query: {sql}')
     return sql
 
 
@@ -68,6 +65,8 @@ def getDataFromDatabase(**config):
                     columns.append(q)
 
         assert type(sql) == str, "Query must be string"
+        
+        logger.info(f"SELECT: {sql}")
         cur.execute(sql)
         allData = cur.fetchall()
         cur.close()
@@ -78,7 +77,7 @@ def getDataFromDatabase(**config):
         # else:
         #     # convert tuple to list
         #     allData = [list(data) for data in allData]
-        logger.info("get data from database success")
+        logger.info("SELECT: Get data from database  success")
         return {
             'status': STATUS_SUCCESS,
             'data': allData
@@ -97,17 +96,24 @@ def getDataFromDatabase(**config):
 def insertDataIntoDatabase(**config):
     try:
         logger = check_key(config, 'logger')
-        logger.info("START INSERT")
+        
         params = configDatabase()
         config['insert_flag'] = True
         # connect to the PostgreSQL server
         conn = psycopg2.connect(**params)
         # create a cursor
         cur = conn.cursor()
-        values = check_key(config, 'values')
-        sql = parseQuery(**config)
-        logger.info(f"SQL: {sql}")
-        cur.execute(sql, values)
+        
+        sql = check_key(config, 'sql')
+        
+        if not sql:
+            values = check_key(config, 'values')
+            sql = parseQuery(**config)
+            sql = sql % values
+            cur.execute(sql)
+        else:
+            cur.execute(sql)
+        logger.info(f"INSERT: {sql}")
         conn.commit()
         cur.close()
         logger.info("INSERT DONE")
@@ -137,12 +143,15 @@ def updateDataFromDatabase(**config):
         cur = conn.cursor()
 
         sql = check_key(config, 'sql')
+        
         if not sql:
             sql = parseQuery(**config)
             values = check_key(config, 'values')
-            cur.execute(sql, values)
+            sql = sql % values
+            cur.execute(sql)
         else:
             cur.execute(sql)
+        logger.info(f"UPDATE: {sql}")
         conn.commit()
         cur.close()
 
