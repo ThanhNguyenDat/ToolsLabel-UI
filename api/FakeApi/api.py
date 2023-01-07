@@ -44,7 +44,7 @@ async def predict(url_image=Form()):
         # obj = ObjectDetection(image)
         if url_image is None:
             return jsonable_encoder({
-                "status": "fail",
+                "msg": "fail",
                 "data": "url_image is none"
             })
 
@@ -60,19 +60,55 @@ async def predict(url_image=Form()):
             results.pandas().xyxy[0].to_json(orient="records"))
 
         # get classification
-        results_json = results_json[0]['class']
+        result = results_json[0]['class']
 
         return jsonable_encoder({
-            "status": "success",
+            "msg": "success",
+            "data": result,
+        })
+
+    except Exception as e:
+        print(e)
+        return jsonable_encoder({
+            "msg": "fail",
+            "data": str(e)
+        })
+
+
+@app.post("/object_detection")
+async def predict(url_image=Form()):
+    try:
+        # print("CHECK: ", image)
+        # obj = ObjectDetection(image)
+        if url_image is None:
+            return jsonable_encoder({
+                "msg": "fail",
+                "data": "url_image is none"
+            })
+
+        response = requests.get(url_image)
+        img_bytes = io.BytesIO(response.content)
+        img = PIL.Image.open(img_bytes)
+        # nparr = np.frombuffer(img_bytes, np.uint8)
+        # img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+        # predict model
+        model = torch.hub.load('ultralytics/yolov5', 'yolov5s')
+        results = model(img)
+        results_json = json.loads(
+            results.pandas().xyxy[0].to_json(orient="records"))
+
+        return jsonable_encoder({
+            "msg": "success",
             "data": results_json,
         })
 
     except Exception as e:
         print(e)
         return jsonable_encoder({
-            "status": "fail",
+            "msg": "fail",
             "data": str(e)
         })
+
 
 if __name__ == "__main__":
     uvicorn.run("api:app", host="0.0.0.0", port=8003, reload=True)
